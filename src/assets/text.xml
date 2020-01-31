@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<base>
-	<person y="2019" m="7" d="10">
-		<name/>
-		<age/>
-		Hello! This is text.
-	</person>
-</base>
