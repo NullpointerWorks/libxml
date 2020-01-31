@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<title>PBF Zoeker</title>
+		<meta name="description" content="PBF Zoekmachine - Axtron BV"/>
+		<meta name="keywords" content="PBF,Zoeker,Zoekmachine,Axtron"/>
+		<meta name="author" content="NullPointer Works"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<meta charset="utf-8"/>
+		<meta http-equiv="Cache-Control" content="no-cache"/>
+		<!-- load cascading style sheets -->
+		<link rel="stylesheet" type="text/css" href="libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/index.css"/>
+		<link rel="stylesheet" type="text/css" href="css/search.css"/>
+		<link rel="stylesheet" type="text/css" href="css/content.css"/>
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+		<link rel="icon" href="favicon.ico" type="image/x-icon"/>
+	</head>
+	<body>
+		<!-- load javascript libraries -->
+		<script type="text/javascript" src="js/string.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+		<!-- PBF search form -->
+		<div class="pbfsearch">
+			<form class="searchform">
+				<input type="text" placeholder="Zoeken..." id="searchif" oninput="this.value = numeric(this.value);"/>
+				<button type="button" onclick="updatePage();">
+					<i class="fa fa-search"></i>
+				</button>
+			</form>
+		</div>
+		<!-- available content -->
+		<div class="content" id="content">
+			<div id="#error">
+				<i class="fa fa-exclamation-triangle" style="font-size:52px;color:red;"/>
+				De opgegeven samenstelling is niet beschikbaar.
+			</div>
+			<!-- dynamic content -->
+			<!-- comment form -->
+			<div id="commentform" style="display:none;">
+				<br/>
+				<form id="cmtform" class="commentform" method="POST" onsubmit="return submitComment();">
+					<input id="cmtname" type="text" name="n" placeholder="Naam..."/>
+					<input id="cmttarget" type="text" name="t" style="display:none;"/>
+					<textarea id="cmttext" name="s" placeholder="Opmerking.." style="height:200px"/>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
