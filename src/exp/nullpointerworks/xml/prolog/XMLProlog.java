@@ -22,6 +22,14 @@ public class XMLProlog implements Prolog
 		addAttribute( new Attribute().setName("encoding").setValue(e) );
 	}
 	
+	public XMLProlog(String v, String e, String s)
+	{
+		this();
+		addAttribute( new Attribute().setName("version").setValue(v) );
+		addAttribute( new Attribute().setName("encoding").setValue(e) );
+		addAttribute( new Attribute().setName("standalone").setValue(s) );
+	}
+	
 	@Override
 	public String getString()
 	{
