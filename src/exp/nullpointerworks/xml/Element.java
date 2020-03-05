@@ -280,6 +280,35 @@ public class Element implements Content<Element>
 		}
 		return null;
 	}
+	
+	/**
+	 * 
+	 */
+	public String getText()
+	{
+		for (Content<?> a : children)
+		{
+			if ((a instanceof Text) ) return ((Text)a).getText();
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 */
+	public String getText(int index)
+	{
+		int l = 0;
+		for (Content<?> a : children)
+		{
+			if ((a instanceof Text) )
+			{
+				if (l==index) return ((Text)a).getText();
+				l++;
+			}
+		}
+		return null;
+	}
 
 	/* 
 	 * ========================================================
