@@ -3,6 +3,9 @@ package exp.nullpointerworks.xml;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ */
 public class Element implements Content<Element>
 {
 	private Element parent = null;
@@ -10,12 +13,18 @@ public class Element implements Content<Element>
 	private List<Attribute> attributes;
 	private String name = "";
 	
+	/**
+	 * 
+	 */
 	public Element()
 	{
 		children = new ArrayList<Content<?>>();
 		attributes = new ArrayList<Attribute>();
 	}
 	
+	/**
+	 * 
+	 */
 	public Element(String name)
 	{
 		this();
@@ -40,11 +49,17 @@ public class Element implements Content<Element>
 		return children.size() < 1;
 	}
 	
+	/**
+	 * 
+	 */
 	public boolean hasName()
 	{
 		return name.length() > 0;
 	}
 	
+	/**
+	 * 
+	 */
 	public boolean hasElements()
 	{
 		boolean hasElement = false;
@@ -58,6 +73,9 @@ public class Element implements Content<Element>
 		return hasElement;
 	}
 	
+	/**
+	 * 
+	 */
 	public boolean hasText()
 	{
 		for (Content<?> a : children)
@@ -66,7 +84,10 @@ public class Element implements Content<Element>
 		}
 		return false;
 	}
-
+	
+	/**
+	 * 
+	 */
 	protected boolean contains(Content<?> el)
 	{
 		if (this.hashCode() == el.hashCode()) return true;
@@ -100,23 +121,29 @@ public class Element implements Content<Element>
 		return this;
 	}
 	
+	/**
+	 * 
+	 */
 	public Element setName(String n)
 	{
 		String nn = n.trim();
 		if (nn.length() > 0) name = nn;
 		return this;
 	}
-
+	
+	/**
+	 * 
+	 */
 	public Element setText(String txt)
 	{
-		int l=children.size()-1;
-		
-		for (;l>=0;l--)
+		int i=0,l=children.size();
+		for (;i<l;i++)
 		{
-			Content<?> c = children.get(l);
+			Content<?> c = children.get(i);
 			if ((c instanceof Text) )
 			{
-				children.remove(l);
+				((Text)c).setText(txt);
+				return this;
 			}
 		}
 		addChild( new Text(txt) );
@@ -129,6 +156,9 @@ public class Element implements Content<Element>
 	 * ========================================================
 	 */
 	
+	/**
+	 * 
+	 */
 	public Element addAttribute(Attribute at)
 	{
 		if (at==null) return this;
@@ -141,11 +171,17 @@ public class Element implements Content<Element>
 		return this;
 	}
 	
+	/**
+	 * 
+	 */
 	public Element addAttribute(String name, String value) 
 	{
 		return addAttribute( new Attribute(name,value) );
 	}
-
+	
+	/**
+	 * 
+	 */
 	public Element addChild(Content<?> el)
 	{
 		if (!contains(el))
@@ -167,23 +203,32 @@ public class Element implements Content<Element>
 	{
 		return parent;
 	}
-
+	
 	@Override
 	public String getName()
 	{
 		return name;
 	}
 	
+	/**
+	 * 
+	 */
 	public String getStart()
 	{
 		return "<";
 	}
 	
+	/**
+	 * 
+	 */
 	public String getEnd()
 	{
 		return ( (children.size() > 0)?"":"/" )+">";
 	}
 	
+	/**
+	 * 
+	 */
 	public Attribute getAttribute(int index)
 	{
 		if (index >= 0)
