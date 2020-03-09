@@ -118,7 +118,7 @@ public class DocumentWriter
 			boolean textOnly = !r.getParent().hasElements();
 			String postfix = (textOnly)?"":format.getNewLine();
 			tab = (textOnly)?"":tab;
-			String txt = r.getText();
+			String txt = r.getContent();
 			tf.addLine(tab+txt+postfix);
 		}
 	}

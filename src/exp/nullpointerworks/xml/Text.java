@@ -9,7 +9,7 @@ public class Text implements Content<Text>
 	
 	public Text(String n)
 	{
-		setText(n);
+		setContent(n);
 	}
 
 	@Override
@@ -43,17 +43,17 @@ public class Text implements Content<Text>
 		return this;
 	}
 
-	public String getText()
+	public String getContent()
 	{
 		return text;
 	}
 
-	public void setText(String c)
+	public void setContent(String c)
 	{
 		text = c;
 	}
 
-	public void addText(String c)
+	public void addContent(String c)
 	{
 		text = text + c;
 	}

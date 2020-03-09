@@ -142,7 +142,7 @@ public class Element implements Content<Element>
 			Content<?> c = children.get(i);
 			if ((c instanceof Text) )
 			{
-				((Text)c).setText(txt);
+				((Text)c).setContent(txt);
 				return this;
 			}
 		}
@@ -333,7 +333,7 @@ public class Element implements Content<Element>
 	{
 		for (Content<?> a : children)
 		{
-			if ((a instanceof Text) ) return ((Text)a).getText();
+			if ((a instanceof Text) ) return ((Text)a).getContent();
 		}
 		return null;
 	}
@@ -348,7 +348,7 @@ public class Element implements Content<Element>
 		{
 			if ((a instanceof Text) )
 			{
-				if (l==index) return ((Text)a).getText();
+				if (l==index) return ((Text)a).getContent();
 				l++;
 			}
 		}
