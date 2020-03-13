@@ -63,7 +63,7 @@ public class DocumentWriter
 		if ((root instanceof Element) )
 		{
 			Element r = (Element)root;
-			List<Content<?>> c = r.getChildren();
+			List<Content<?>> c = r.getAbstractChildren();
 			List<Attribute> a = r.getAttributes();
 			
 			// if the tag has no children tags and just text, behave without tabs and newline

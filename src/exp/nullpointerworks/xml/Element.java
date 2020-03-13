@@ -294,35 +294,35 @@ public class Element implements Content<Element>
 	{
 		return attributes;
 	}
-
+	
 	/**
 	 * 
 	 */
-	public List<Content<?>> getChildren()
+	public List<Content<?>> getAbstractChildren()
 	{
-		return children;
-	}
-
-	/**
-	 * 
-	 */
-	public List<Content<?>> getChildren(String name)
-	{
-		List<Content<?>> children = new ArrayList<Content<?>>();
-		for (Content<?> a : children)
-		{
-			if (a.getName().equalsIgnoreCase(name))
-			{
-				children.add(a);
-			}
-		}
 		return children;
 	}
 	
 	/**
 	 * 
 	 */
-	public Content<?> getChild(int index)
+	public List<Content<?>> getAbstractChildren(String name)
+	{
+		List<Content<?>> ch = new ArrayList<Content<?>>();
+		for (Content<?> a : children)
+		{
+			if (a.getName().equalsIgnoreCase(name))
+			{
+				ch.add(a);
+			}
+		}
+		return ch;
+	}
+	
+	/**
+	 * 
+	 */
+	public Content<?> getAbstractChild(int index)
 	{
 		if (index >= 0)
 		if (index < children.size())
@@ -335,7 +335,7 @@ public class Element implements Content<Element>
 	/**
 	 * 
 	 */
-	public Content<?> getChild(String name)
+	public Content<?> getAbstractChild(String name)
 	{
 		for (Content<?> a : children)
 		{
@@ -345,6 +345,63 @@ public class Element implements Content<Element>
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * 
+	 */
+	public Element getChild(int index)
+	{
+		if (index >= 0)
+		if (index < children.size())
+		{
+			var el = children.get(index);
+			if (el instanceof Element) return (Element)el;
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 */
+	public Element getChild(String name)
+	{
+		for (Content<?> a : children)
+		{
+			if (a.getName().equalsIgnoreCase(name))
+			{
+				if (a instanceof Element) return (Element)a;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 */
+	public List<Element> getChildren()
+	{
+		List<Element> ch = new ArrayList<Element>();
+		for (Content<?> a : children)
+		{
+			if (a instanceof Element) ch.add((Element)a);
+		}
+		return ch;
+	}
+	
+	/**
+	 * 
+	 */
+	public List<Element> getChildren(String name)
+	{
+		List<Element> ch = new ArrayList<Element>();
+		for (Content<?> a : children)
+		{
+			if (a.getName().equalsIgnoreCase(name))
+				if (a instanceof Element) 
+					ch.add((Element)a);
+		}
+		return ch;
 	}
 	
 	/**
