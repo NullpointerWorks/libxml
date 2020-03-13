@@ -14,10 +14,16 @@ public class Document
 {
 	private Prolog prolog;
 	private Element root = null;
-	
+
 	public Document()
 	{
 		prolog = new XMLProlog(Version.V10, Encoding.UTF8);
+	}
+	
+	public Document(Element root)
+	{
+		prolog = new XMLProlog(Version.V10, Encoding.UTF8);
+		setRootElement(root);
 	}
 	
 	public Document setProlog(Prolog pr)
