@@ -1,3 +1,8 @@
+/*
+ * Creative Commons - Attribution, Share Alike 4.0 
+ * Nullpointer Works (2019)
+ * Use is subject to license terms.
+ */
 package exp.nullpointerworks.xml;
 
 import java.util.ArrayList;
@@ -298,6 +303,22 @@ public class Element implements Content<Element>
 		return children;
 	}
 
+	/**
+	 * 
+	 */
+	public List<Content<?>> getChildren(String name)
+	{
+		List<Content<?>> children = new ArrayList<Content<?>>();
+		for (Content<?> a : children)
+		{
+			if (a.getName().equalsIgnoreCase(name))
+			{
+				children.add(a);
+			}
+		}
+		return children;
+	}
+	
 	/**
 	 * 
 	 */
