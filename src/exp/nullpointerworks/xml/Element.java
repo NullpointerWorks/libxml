@@ -474,4 +474,14 @@ public class Element implements Content<Element>
 		}
 		return this;
 	}
+	
+	/**
+	 * 
+	 */
+	public Element remAll()
+	{
+		children.clear();
+		attributes.clear();
+		return this;
+	}
 }

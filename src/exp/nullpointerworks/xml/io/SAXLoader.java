@@ -19,7 +19,19 @@ import exp.nullpointerworks.xml.XMLParseException;
  */
 public class SAXLoader implements XMLLoader
 {
-
+	private Document doc;
+	
+	public SAXLoader()
+	{
+		doc = new Document();
+	}
+	
+	public SAXLoader(Document doc)
+	{
+		if (doc==null) doc = new Document();
+		this.doc=doc;
+	}
+	
 	@Override
 	public Document getDocument()
 	{
@@ -37,5 +49,8 @@ public class SAXLoader implements XMLLoader
 	{
 		return null;
 	}
+	
+	
+	
 	
 }

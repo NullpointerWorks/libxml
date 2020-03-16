@@ -27,6 +27,11 @@ import exp.nullpointerworks.xml.prolog.XMLProlog;
 public class DOMLoader implements XMLLoader
 {
 	private Document doc;
+
+	public DOMLoader()
+	{
+		doc = new Document();
+	}
 	
 	public DOMLoader(Document doc)
 	{
