@@ -22,6 +22,11 @@ public final class FormatBuilder
 		return new PrettyFormat();
 	}
 	
+	public static Format getPrettyWindowsFormat() 
+	{
+		return new PrettyWindowsFormat();
+	}
+	
 	public static Format getHtmlFormat() 
 	{
 		return new HtmlFormat();
