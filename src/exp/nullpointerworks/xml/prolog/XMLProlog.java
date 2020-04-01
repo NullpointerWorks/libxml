@@ -8,6 +8,8 @@ package exp.nullpointerworks.xml.prolog;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nullpointerworks.util.file.Encoding;
+
 import exp.nullpointerworks.xml.Attribute;
 
 public class XMLProlog implements Prolog
@@ -17,7 +19,6 @@ public class XMLProlog implements Prolog
 	public XMLProlog() 
 	{
 		attributes = new ArrayList<Attribute>();
-		//this(Version.V10, Encoding.UTF8);
 	}
 	
 	public XMLProlog(String v, String e)
@@ -64,7 +65,7 @@ public class XMLProlog implements Prolog
 				return a.getValue();
 			}
 		}
-		return "UTF-8";
+		return Encoding.UTF8;
 	}
 
 	@Override
