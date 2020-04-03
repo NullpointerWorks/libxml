@@ -13,12 +13,12 @@ public class DocumentBuilder
 	 * returns DOM loaders
 	 */
 	
-	public static XMLLoader getDOMLoader()
+	public static IDocumentLoader getDOMLoader()
 	{
 		return new DOMLoader(null);
 	}
 	
-	public static XMLLoader getDOMLoader(Document doc)
+	public static IDocumentLoader getDOMLoader(Document doc)
 	{
 		return new DOMLoader(doc);
 	}

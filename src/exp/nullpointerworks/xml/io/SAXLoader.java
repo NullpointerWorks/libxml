@@ -17,7 +17,7 @@ import exp.nullpointerworks.xml.XMLParseException;
  * 
  * streamed unidirectional loading with events
  */
-public class SAXLoader implements XMLLoader
+public class SAXLoader implements IDocumentLoader
 {
 	private Document doc;
 	

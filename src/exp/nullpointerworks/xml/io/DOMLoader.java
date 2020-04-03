@@ -24,7 +24,7 @@ import exp.nullpointerworks.xml.prolog.XMLProlog;
 /**
  * Document Object Model File Loader. Loads the entire file into memory and then parses to create an document element structure.
  */
-public class DOMLoader implements XMLLoader
+public class DOMLoader implements IDocumentLoader
 {
 	private Document doc;
 
@@ -170,8 +170,10 @@ public class DOMLoader implements XMLLoader
 			}
 			else
 			{
-				// error
+				// error. if there's no root, return the elment. it's the new root
+				return el;
 			}
+			
 			return root;
 		}
 		

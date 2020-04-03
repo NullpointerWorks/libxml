@@ -19,7 +19,7 @@ public class DocumentIO
 	 */
 	public static Document read(String path) throws XMLParseException, IOException 
 	{
-		XMLLoader dl = DocumentBuilder.getDOMLoader();
+		IDocumentLoader dl = DocumentBuilder.getDOMLoader();
 		Document doc = dl.parse(path);
 		return doc;
 	}
