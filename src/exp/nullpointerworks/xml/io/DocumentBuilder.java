@@ -12,7 +12,6 @@ public class DocumentBuilder
 	/*
 	 * returns DOM loaders
 	 */
-	
 	public static IDocumentLoader getDOMLoader()
 	{
 		return new DOMLoader(null);
@@ -26,5 +25,14 @@ public class DocumentBuilder
 	/*
 	 * returns SAX loaders
 	 */
+	public static IDocumentLoader getSAXLoader()
+	{
+		return new SAXLoader(null);
+	}
+	
+	public static IDocumentLoader getSAXLoader(Document doc)
+	{
+		return new SAXLoader(doc);
+	}
 	
 }

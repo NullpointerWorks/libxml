@@ -5,7 +5,9 @@
  */
 package exp.nullpointerworks.xml.io;
 
-import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import com.nullpointerworks.util.StringUtil;
@@ -46,23 +48,23 @@ public class DOMLoader implements IDocumentLoader
 	}
 	
 	@Override
-	public Document parse(String path) throws IOException, XMLParseException 
+	public Document parse(String path) throws FileNotFoundException, XMLParseException
 	{
-		TextFile tf = TextFileParser.file(path);
-		Document doc = toDocument(tf);
+		File initialFile = new File(path);
+	    InputStream stream;
+	    stream = new FileInputStream(initialFile);
+		return parse(stream);
+	}
+	
+	@Override
+	public Document parse(InputStream is) throws XMLParseException
+	{
+		var tf = TextFileParser.stream(is);
+		var doc = toDocument(tf);
 		tf.clear();
 		return doc;
 	}
 	
-	@Override
-	public Document parse(InputStream is) throws XMLParseException 
-	{
-		TextFile tf = TextFileParser.stream(is);
-		Document doc = toDocument(tf);
-		tf.clear();
-		return doc;
-	}
-
 	/*
 	 * =========================================
 	 * reading code
@@ -110,7 +112,6 @@ public class DOMLoader implements IDocumentLoader
 		/*
 		 * construct xml data
 		 */
-		hasTag = false;
 		line = "";
 		Element root = null;
 		for (;i<l;i++)
@@ -170,7 +171,7 @@ public class DOMLoader implements IDocumentLoader
 			}
 			else
 			{
-				// error. if there's no root, return the elment. it's the new root
+				// error. if there's no root, return the element. it's the new root
 				return el;
 			}
 			
@@ -259,27 +260,27 @@ public class DOMLoader implements IDocumentLoader
 		}
 	}
 	
-	private boolean isNewTag(String chr)
+	protected boolean isNewTag(String chr)
 	{
 		return chr.equalsIgnoreCase("<");
 	}
 	
-	private boolean isEndTag(String chr)
+	protected boolean isEndTag(String chr)
 	{
 		return chr.equalsIgnoreCase(">");
 	}
 	
-	private boolean isSelfClosing(String text)
+	protected boolean isSelfClosing(String text)
 	{
 		return text.endsWith("/");
 	}
 	
-	private boolean isTagOpening(String text)
+	protected boolean isTagOpening(String text)
 	{
 		return !text.contains("/");
 	}
 	
-	private boolean isTagClosing(String text)
+	protected boolean isTagClosing(String text)
 	{
 		return text.startsWith("/");
 	}

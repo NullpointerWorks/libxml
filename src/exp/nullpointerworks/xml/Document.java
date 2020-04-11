@@ -53,4 +53,9 @@ public class Document
 		root = new Element(name);
 		return root;
 	}
+	
+	public boolean isEmpty()
+	{
+		return root == null;
+	}
 }

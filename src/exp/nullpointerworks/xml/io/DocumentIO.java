@@ -14,6 +14,10 @@ import exp.nullpointerworks.xml.format.Format;
 
 public class DocumentIO 
 {
+	// ========================================================================
+	// 		memory loading
+	// ========================================================================
+	
 	/**
 	 * load using a DOM loader
 	 */
@@ -24,13 +28,63 @@ public class DocumentIO
 		return doc;
 	}
 	
-	/*
-	 * load using a SAX stream loader
+	/**
+	 * load using a specified loader
+	 */
+	public static Document read(String path, XMLLoaderType type) throws XMLParseException, IOException 
+	{
+		IDocumentLoader dl = null;
+		switch(type)
+		{
+		case SAX:
+			dl = DocumentBuilder.getSAXLoader();
+			break;
+		case DOM:
+		default:
+			dl = DocumentBuilder.getDOMLoader();
+			break;
+		}
+		Document doc = dl.parse(path);
+		return doc;
+	}
+	
+	// ========================================================================
+	// 		stream loading
+	// ========================================================================
+	
+	/**
+	 * load using a DOM stream loader
 	 */
 	public static Document stream(InputStream is) throws XMLParseException 
 	{
-		return null;
+		IDocumentLoader dl = DocumentBuilder.getDOMLoader();
+		Document doc = dl.parse(is);
+		return doc;
 	}
+	
+	/**
+	 * stream using a specified loader
+	 */
+	public static Document stream(InputStream is, XMLLoaderType type) throws XMLParseException, IOException 
+	{
+		IDocumentLoader dl = null;
+		switch(type)
+		{
+		case SAX:
+			dl = DocumentBuilder.getSAXLoader();
+			break;
+		case DOM:
+		default:
+			dl = DocumentBuilder.getDOMLoader();
+			break;
+		}
+		Document doc = dl.parse(is);
+		return doc;
+	}
+
+	// ========================================================================
+	// 		writing 
+	// ========================================================================
 	
 	/*
 	 * write to disc
