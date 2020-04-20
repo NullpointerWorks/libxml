@@ -59,8 +59,8 @@ public class DOMLoader implements IDocumentLoader
 	@Override
 	public Document parse(InputStream is) throws XMLParseException
 	{
-		var tf = TextFileParser.stream(is);
-		var doc = toDocument(tf);
+		TextFile tf = TextFileParser.stream(is);
+		Document doc = toDocument(tf);
 		tf.clear();
 		return doc;
 	}

@@ -355,7 +355,7 @@ public class Element implements Content<Element>
 		if (index >= 0)
 		if (index < children.size())
 		{
-			var el = children.get(index);
+			Content<?> el = children.get(index);
 			if (el instanceof Element) return (Element)el;
 		}
 		return null;
