@@ -11,8 +11,9 @@ import java.io.InputStream;
 import exp.nullpointerworks.xml.Document;
 import exp.nullpointerworks.xml.XMLParseException;
 
-public interface IDocumentLoader
+public interface DocumentLoader
 {
+	XMLLoaderType getLoaderType();
 	Document getDocument();
 	Document parse(String path) 
 			throws FileNotFoundException, XMLParseException;

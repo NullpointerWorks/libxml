@@ -8,11 +8,10 @@ package exp.nullpointerworks.xml.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import com.nullpointerworks.util.StringUtil;
-import com.nullpointerworks.util.file.textfile.TextFile;
-import com.nullpointerworks.util.file.textfile.TextFileParser;
 
 import exp.nullpointerworks.xml.Attribute;
 import exp.nullpointerworks.xml.Document;
@@ -24,18 +23,18 @@ import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
 
 /**
- * Document Object Model File Loader. Loads the entire file into memory and then parses to create an document element structure. The primary disadvantage is that it's resource intensive when parsing large files.
+ * Document Object Model File Loader. This implementation streams the content of a file and then parses to create an document element structure. This method is less resource intensive than the regular DOM loader.
  */
-public class DOMLoader implements DocumentLoader
+public class StreamLoader implements DocumentLoader
 {
 	private Document doc;
-
-	public DOMLoader()
+	
+	public StreamLoader()
 	{
 		doc = new Document();
 	}
 	
-	public DOMLoader(Document doc)
+	public StreamLoader(Document doc)
 	{
 		if (doc==null) doc = new Document();
 		this.doc=doc;
@@ -44,63 +43,59 @@ public class DOMLoader implements DocumentLoader
 	@Override
 	public XMLLoaderType getLoaderType() 
 	{
-		return XMLLoaderType.DOM;
+		return XMLLoaderType.STREAM;
 	}
 	
 	@Override
 	public Document getDocument()
 	{
-		return doc;
+		return null;
 	}
 	
 	@Override
 	public Document parse(String path) throws FileNotFoundException, XMLParseException
 	{
-		File initialFile = new File(path);
-	    InputStream stream;
-	    stream = new FileInputStream(initialFile);
+		File lfile = new File(path);
+		if (!lfile.exists()) throw new FileNotFoundException();
+	    InputStream stream = new FileInputStream(lfile);
 		return parse(stream);
 	}
-	
+
 	@Override
-	public Document parse(InputStream is) throws XMLParseException
+	public Document parse(InputStream fis) throws XMLParseException
 	{
-		TextFile tf = TextFileParser.stream(is);
-		Document doc = toDocument(tf);
-		tf.clear();
+		doc = new Document();
+		
+		try 
+		{
+			parseProlog(doc, fis);
+		}
+		catch (IOException e) 
+		{
+			throw new XMLParseException();
+		}
+		
+		try 
+		{
+			parseContent(doc, fis);
+		}
+		catch (IOException e) 
+		{
+			throw new XMLParseException();
+		}
+		
 		return doc;
 	}
 	
-	/*
-	 * =========================================
-	 * reading code
-	 * =========================================
-	 */
-	
-	/**
-	 * @throws XMLElementParseException 
-	 */
-	private Document toDocument(TextFile tf) throws XMLParseException
+	private void parseProlog(Document doc, InputStream fis) throws XMLParseException, IOException
 	{
-		String[] lines = tf.getLines();
-		String documentLine = "";
-		for (String line : lines)
-		{
-			line = line.trim();
-			documentLine += line;
-		}
-		
-		String[] characters = documentLine.split("");
-		int i=0,l=characters.length;
 		String line = "";
-		
-		/*
-		 * construct prolog tag
-		 */
+		String chr;
 		boolean hasTag = false;
-		for (;i<l;i++)
+		while (fis.available() > 0) 
 		{
-			String chr = characters[i];
+			chr = ""+( (char)fis.read() );
+			
 			if (isNewTag(chr))
 			{
 				hasTag = true;
@@ -114,16 +109,16 @@ public class DOMLoader implements DocumentLoader
 			}
 			line += chr;
 		}
-		
-		/*
-		 * construct xml data
-		 */
-		line = "";
+	}
+	
+	private void parseContent(Document doc, InputStream fis) throws XMLParseException, IOException
+	{
+		String line = "";
 		Element root = null;
-		for (;i<l;i++)
+		String chr;
+		while (fis.available() > 0) 
 		{
-			String chr = characters[i];
-			
+			chr = ""+( (char)fis.read() );
 			if (isNewTag(chr))
 			{
 				if (line.length() > 0) 
@@ -152,7 +147,6 @@ public class DOMLoader implements DocumentLoader
 		}
 		
 		doc.setRootElement(root);
-		return doc;
 	}
 	
 	private Element parseTag(Element root, String line) throws XMLParseException 
@@ -169,7 +163,6 @@ public class DOMLoader implements DocumentLoader
 		if (isSelfClosing(elName))
 		{
 			elName = elName.substring(0, elName.length()-1);
-			//Log.out("new closing tag:   "+elName);
 			Element el = makeElement(elName, tokens);
 			if (root != null)
 			{
@@ -189,7 +182,6 @@ public class DOMLoader implements DocumentLoader
 		 */
 		if (isTagOpening(elName))
 		{
-			//Log.out("new tag:           "+elName);
 			Element el = makeElement(elName, tokens);
 			if (root != null)
 			{
@@ -208,7 +200,6 @@ public class DOMLoader implements DocumentLoader
 		 */
 		if (isTagClosing(elName))
 		{
-			//Log.out("closing tag:       "+elName);
 			if (root!=null)
 			{
 				if (root.getParent()!=null)
@@ -266,27 +257,27 @@ public class DOMLoader implements DocumentLoader
 		}
 	}
 	
-	protected boolean isNewTag(String chr)
+	private boolean isNewTag(String chr)
 	{
 		return chr.equalsIgnoreCase("<");
 	}
 	
-	protected boolean isEndTag(String chr)
+	private boolean isEndTag(String chr)
 	{
 		return chr.equalsIgnoreCase(">");
 	}
 	
-	protected boolean isSelfClosing(String text)
+	private boolean isSelfClosing(String text)
 	{
 		return text.endsWith("/");
 	}
 	
-	protected boolean isTagOpening(String text)
+	private boolean isTagOpening(String text)
 	{
 		return !text.contains("/");
 	}
 	
-	protected boolean isTagClosing(String text)
+	private boolean isTagClosing(String text)
 	{
 		return text.startsWith("/");
 	}

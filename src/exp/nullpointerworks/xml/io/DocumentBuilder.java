@@ -9,30 +9,36 @@ import exp.nullpointerworks.xml.Document;
 
 public class DocumentBuilder
 {	
-	/*
-	 * returns DOM loaders
+	/**
+	 * Returns a DOM loader
 	 */
-	public static IDocumentLoader getDOMLoader()
+	public static DocumentLoader getDOMLoader()
 	{
 		return new DOMLoader(null);
 	}
 	
-	public static IDocumentLoader getDOMLoader(Document doc)
+	/**
+	 * Returns a DOM loader
+	 */
+	public static DocumentLoader getDOMLoader(Document doc)
 	{
 		return new DOMLoader(doc);
 	}
 	
-	/*
-	 * returns SAX loaders
+	/**
+	 * Returns a DOM loader using a file input stream.
 	 */
-	public static IDocumentLoader getSAXLoader()
+	public static DocumentLoader getStreamLoader()
 	{
-		return new SAXLoader(null);
+		return new StreamLoader(null);
 	}
 	
-	public static IDocumentLoader getSAXLoader(Document doc)
+	/**
+	 * Returns a DOM loader using a file input stream.
+	 */
+	public static DocumentLoader getStreamLoader(Document doc)
 	{
-		return new SAXLoader(doc);
+		return new StreamLoader(doc);
 	}
 	
 }

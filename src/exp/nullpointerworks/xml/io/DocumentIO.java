@@ -23,7 +23,7 @@ public class DocumentIO
 	 */
 	public static Document read(String path) throws XMLParseException, IOException 
 	{
-		IDocumentLoader dl = DocumentBuilder.getDOMLoader();
+		DocumentLoader dl = DocumentBuilder.getDOMLoader();
 		Document doc = dl.parse(path);
 		return doc;
 	}
@@ -33,11 +33,11 @@ public class DocumentIO
 	 */
 	public static Document read(String path, XMLLoaderType type) throws XMLParseException, IOException 
 	{
-		IDocumentLoader dl = null;
+		DocumentLoader dl = null;
 		switch(type)
 		{
-		case SAX:
-			dl = DocumentBuilder.getSAXLoader();
+		case STREAM:
+			dl = DocumentBuilder.getStreamLoader();
 			break;
 		case DOM:
 		default:
@@ -57,7 +57,7 @@ public class DocumentIO
 	 */
 	public static Document stream(InputStream is) throws XMLParseException 
 	{
-		IDocumentLoader dl = DocumentBuilder.getDOMLoader();
+		DocumentLoader dl = DocumentBuilder.getDOMLoader();
 		Document doc = dl.parse(is);
 		return doc;
 	}
@@ -67,11 +67,11 @@ public class DocumentIO
 	 */
 	public static Document stream(InputStream is, XMLLoaderType type) throws XMLParseException, IOException 
 	{
-		IDocumentLoader dl = null;
+		DocumentLoader dl = null;
 		switch(type)
 		{
-		case SAX:
-			dl = DocumentBuilder.getSAXLoader();
+		case STREAM:
+			dl = DocumentBuilder.getStreamLoader();
 			break;
 		case DOM:
 		default:
