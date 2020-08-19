@@ -43,48 +43,70 @@ public interface SAXEventListener
 	// ============================================================
 	// 
 	// ============================================================
-/*
-*XML_START_ELEMENT	The name of the XML element that is starting
-*XML_CHARS	The value of the XML element
-*XML_PREDEF_REF	The value of a predefined reference
-*XML_UCS2_REF	The value of a UCS-2 reference
-*XML_UNKNOWN_REF	The name of an unknown entity reference
-*XML_END_ELEMENT	The name of the XML element that is ending
-*/
+	
+	/*
+	 * The name of the XML element that is starting
+	 */
 	void onElementStart();
 	
+	/*
+	 * The value of the XML element
+	 */
 	void onElementCharacters();
 	
+	/*
+	 * The value of a predefined reference
+	 */
 	void onElementReference();
 	
+	/*
+	 * The value of a UCS-2 reference
+	 */
 	void onElementUCS2Reference();
 	
+	/*
+	 * The name of an unknown entity reference
+	 */
 	void onElementUnknownReference();
 	
+	/*
+	 * The name of the XML element that is ending
+	 */
 	void onElementEnd();
 	
 	// ============================================================
 	// 
 	// ============================================================
-/*	
-*XML_ATTR_NAME	The name of the attribute
-*XML_ATTR_CHARS	The value of the attribute
-*XML_ATTR_PREDEF_REF	The value of a predefined reference
-*XML_ATTR_UCS2_REF	The value of a UCS-2 reference
-*XML_UNKNOWN_ATTR_REF	The name of an unknown entity reference
-*XML_END_ATTR	Indicates the end of the attribute
-*/
 	
+	/*
+	 * The name of the attribute
+	 */
 	void onAttributeName();
-
+	
+	/*
+	 * The value of the attribute
+	 */
 	void onAttributeCharacters();
 	
+	/*
+	 * The value of a predefined reference
+	 */
 	void onAttributeReference();
 	
+	/*
+	 * The value of a UCS-2 reference
+	 */
 	void onAttributeUCS2Reference();
 	
+	/*
+	 * The name of an unknown entity reference
+	 */
 	void onAttributeUnknownReference();
-
+	
+	/*
+	 * Indicates the end of the attribute
+	 */
+	void onAttributeEnd();
 	
 	// ============================================================
 	// 
