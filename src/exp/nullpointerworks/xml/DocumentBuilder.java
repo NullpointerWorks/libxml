@@ -1,11 +1,13 @@
 /*
- * Creative Commons - Attribution, Share Alike 4.0 
- * Nullpointer Works (2019)
- * Use is subject to license terms.
+ * Creative Commons - Attribution, Share Alike 4.0
+ * Nullpointer Works (2020)
+ * Use of this library is subject to license terms.
  */
-package exp.nullpointerworks.xml.io;
+package exp.nullpointerworks.xml;
 
-import exp.nullpointerworks.xml.Document;
+import exp.nullpointerworks.xml.io.DOMLoader;
+import exp.nullpointerworks.xml.io.DocumentLoader;
+import exp.nullpointerworks.xml.io.StreamLoader;
 
 public class DocumentBuilder
 {	
