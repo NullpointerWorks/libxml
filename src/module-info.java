@@ -1,7 +1,7 @@
 /**
  * Creative Commons - Attribution, Share Alike 4.0<br>
  * Nullpointer Works (2020)<br>
- * Use of this library is subject to license terms.<br>
+ * Using this library makes you subject to the license terms.<br>
  * @version 0.10.0 experimental
  * @author Michiel Drost - Nullpointer Works
  */
