@@ -197,6 +197,19 @@ public class Element implements Content<Element>
 		return this;
 	}
 	
+	/**
+	 * Inserts the specified child element at the specified index in this list
+	 */
+	public Element addChild(int index, Content<?> el)
+	{
+		if (!contains(el))
+		{
+			el.setParent(this);
+			children.add(index, el);
+		}
+		return this;
+	}
+	
 	/*
 	 * ========================================================
 	 * getter
