@@ -440,7 +440,7 @@ public class Element implements Content<Element>
 	 */
 	
 	/**
-	 * 
+	 * Remove an attribute by hash code
 	 */
 	public Element remAttribute(Attribute at)
 	{
@@ -456,9 +456,21 @@ public class Element implements Content<Element>
 		}
 		return this;
 	}
+	
+	/**
+	 * Remove an attribute by index number
+	 */
+	public Element remAttribute(int index)
+	{
+		if (attributes.size()==0) return this;
+		if (index<0) return this;
+		if (index>=attributes.size()) return this;
+		attributes.remove(index);
+		return this;
+	}
 
 	/**
-	 * 
+	 * Remove a child element by hash code
 	 */
 	public Element remChild(Content<?> at)
 	{
@@ -476,7 +488,19 @@ public class Element implements Content<Element>
 	}
 	
 	/**
-	 * 
+	 * Remove a child element by index number
+	 */
+	public Element remChild(int index)
+	{
+		if (children.size()==0) return this;
+		if (index<0) return this;
+		if (index>=children.size()) return this;
+		children.remove(index);
+		return this;
+	}
+	
+	/**
+	 * Remove all child elements
 	 */
 	public Element remAll()
 	{
