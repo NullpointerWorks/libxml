@@ -1,6 +1,6 @@
 /**
  * Creative Commons - Attribution, Share Alike 4.0<br>
- * Nullpointer Works (2020)<br>
+ * Nullpointer Works (2021)<br>
  * Using this library makes you subject to the license terms.<br>
  * @version 0.12.0 experimental
  * @author Michiel Drost - Nullpointer Works
