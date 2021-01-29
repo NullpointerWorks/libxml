@@ -1,44 +1,43 @@
 /*
  * Creative Commons - Attribution, Share Alike 4.0
- * Nullpointer Works (2020)
+ * Nullpointer Works (2021)
  * Use of this library is subject to license terms.
  */
 package exp.nullpointerworks.xml.prolog;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.nullpointerworks.util.file.Encoding;
-
 import exp.nullpointerworks.xml.Attribute;
+import exp.nullpointerworks.xml.Encoding;
+import exp.nullpointerworks.xml.StandAlone;
+import exp.nullpointerworks.xml.Version;
 
-public class XMLProlog implements Prolog
+public class XMLProlog extends AbstractProlog
 {
-	private List<Attribute> attributes;
-	
-	public XMLProlog() 
+	public XMLProlog()
 	{
-		attributes = new ArrayList<Attribute>();
+		super();
 	}
 	
-	public XMLProlog(String v, String e)
+	public XMLProlog(Version v, Encoding e)
 	{
-		this();
-		addAttribute( new Attribute().setName("version").setValue(v) );
-		addAttribute( new Attribute().setName("encoding").setValue(e) );
+		super();
+		addAttribute( new Attribute().setName("version").setValue( v.asString()) );
+		addAttribute( new Attribute().setName("encoding").setValue( e.asString()) );
 	}
 	
-	public XMLProlog(String v, String e, String s)
+	public XMLProlog(Version v, Encoding e, StandAlone s)
 	{
-		this();
-		addAttribute( new Attribute().setName("version").setValue(v) );
-		addAttribute( new Attribute().setName("encoding").setValue(e) );
-		addAttribute( new Attribute().setName("standalone").setValue(s) );
+		this(v,e);
+		//addAttribute( new Attribute().setName("version").setValue(v.asString()) );
+		//addAttribute( new Attribute().setName("encoding").setValue(e.asString()) );
+		addAttribute( new Attribute().setName("standalone").setValue( s.asString() ) );
 	}
 	
 	@Override
 	public String getString()
 	{
+		List<Attribute> attributes = getAttributes();
 		String add = " ";
 		for (Attribute a : attributes)
 		{
@@ -53,26 +52,5 @@ public class XMLProlog implements Prolog
 			}
 		}
 		return "<?xml"+add+"?>";
-	}
-	
-	@Override
-	public String getEncoding()
-	{
-		for (Attribute a : attributes)
-		{
-			if (a.getName().equalsIgnoreCase("encoding"))
-			{
-				return a.getValue();
-			}
-		}
-		return Encoding.UTF8;
-	}
-
-	@Override
-	public Prolog addAttribute(Attribute att)
-	{
-		if (att!=null)
-			attributes.add(att);
-		return this;
 	}
 }

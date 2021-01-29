@@ -5,8 +5,6 @@
  */
 package exp.nullpointerworks.xml;
 
-import com.nullpointerworks.util.file.Encoding;
-
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
 

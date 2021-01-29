@@ -1,32 +1,32 @@
 /*
  * Creative Commons - Attribution, Share Alike 4.0
- * Nullpointer Works (2020)
+ * Nullpointer Works (2021)
  * Use of this library is subject to license terms.
  */
 package exp.nullpointerworks.xml.prolog;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import exp.nullpointerworks.xml.Attribute;
 
 /**
  * Defaults to HTML5 prolog.
  * @since 1.0.0
  */
-public class HTMLProlog implements Prolog
+public class HTMLProlog extends AbstractProlog
 {
-	private List<Attribute> attributes;
 	private String additional = "";
 	
-	public HTMLProlog() 
+	public HTMLProlog()
 	{
-		attributes = new ArrayList<Attribute>();
+		super();
+	}
+	
+	public HTMLProlog(LegacyHTML add)
+	{
+		super();
+		additional = " "+add.asString();
 	}
 	
 	public HTMLProlog(String add)
 	{
-		this();
+		super();
 		additional = " "+add;
 	}
 	
@@ -34,19 +34,5 @@ public class HTMLProlog implements Prolog
 	public String getString()
 	{
 		return "<!DOCTYPE html"+additional+">";
-	}
-	
-	@Override
-	public String getEncoding()
-	{
-		return "UTF8";
-	}
-
-	@Override
-	public Prolog addAttribute(Attribute att) 
-	{
-		if (att!=null)
-			attributes.add(att);
-		return this;
 	}
 }

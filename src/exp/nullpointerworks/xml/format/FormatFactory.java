@@ -1,20 +1,20 @@
 /*
  * Creative Commons - Attribution, Share Alike 4.0
- * Nullpointer Works (2020)
+ * Nullpointer Works (2021)
  * Use of this library is subject to license terms.
  */
 package exp.nullpointerworks.xml.format;
 
-public final class FormatBuilder 
+public final class FormatFactory 
 {
-	public static FormatBuilder New()
+	public static FormatFactory New()
 	{
-		return new FormatBuilder();
+		return new FormatFactory();
 	}
 	
-	public static FormatBuilder Modify(Format format) 
+	public static FormatFactory Modify(Format format) 
 	{
-		return new FormatBuilder(format);
+		return new FormatFactory(format);
 	}
 	
 	public static Format getPrettyFormat() 
@@ -41,29 +41,29 @@ public final class FormatBuilder
 	
 	private AbstractFormat format;
 	
-	public FormatBuilder()
+	public FormatFactory()
 	{
 		format = new AbstractFormat();
 	}
 	
-	FormatBuilder(Format f)
+	FormatFactory(Format f)
 	{
 		format = new AbstractFormat(f);
 	}
 	
-	public FormatBuilder setSpace(String string)
+	public FormatFactory setSpace(String string)
 	{
 		format.setSpace(string);
 		return this;
 	}
 	
-	public FormatBuilder setTab(String string)
+	public FormatFactory setTab(String string)
 	{
 		format.setTab(string);
 		return this;
 	}
 	
-	public FormatBuilder setNewLine(String string)
+	public FormatFactory setNewLine(String string)
 	{
 		format.setNewLine(string);
 		return this;

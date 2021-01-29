@@ -37,7 +37,7 @@ public class DocumentWriter
 	{
 		// set file encoding
 		TextFile tf = new TextFile();
-		tf.setEncoding( doc.getProlog().getEncoding() );
+		tf.setEncoding( doc.getProlog().getEncoding().asString() );
 		
 		// document header
 		tf.addLine(doc.getProlog().getString() + format.getNewLine() );
