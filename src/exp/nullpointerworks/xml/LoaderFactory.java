@@ -9,7 +9,7 @@ import exp.nullpointerworks.xml.io.DOMLoader;
 import exp.nullpointerworks.xml.io.DocumentLoader;
 import exp.nullpointerworks.xml.io.StreamLoader;
 
-public class DocumentBuilder
+public class LoaderFactory
 {	
 	/**
 	 * Returns a DOM loader
@@ -42,5 +42,4 @@ public class DocumentBuilder
 	{
 		return new StreamLoader(doc);
 	}
-	
 }

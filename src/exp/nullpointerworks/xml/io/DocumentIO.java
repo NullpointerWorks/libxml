@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import exp.nullpointerworks.xml.Document;
-import exp.nullpointerworks.xml.DocumentBuilder;
+import exp.nullpointerworks.xml.LoaderFactory;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
 
@@ -24,7 +24,7 @@ public class DocumentIO
 	 */
 	public static Document read(String path) throws XMLParseException, IOException 
 	{
-		DocumentLoader dl = DocumentBuilder.getDOMLoader();
+		DocumentLoader dl = LoaderFactory.getDOMLoader();
 		Document doc = dl.parse(path);
 		return doc;
 	}
@@ -38,11 +38,11 @@ public class DocumentIO
 		switch(type)
 		{
 		case STREAM:
-			dl = DocumentBuilder.getStreamLoader();
+			dl = LoaderFactory.getStreamLoader();
 			break;
 		case DOM:
 		default:
-			dl = DocumentBuilder.getDOMLoader();
+			dl = LoaderFactory.getDOMLoader();
 			break;
 		}
 		Document doc = dl.parse(path);
@@ -58,7 +58,7 @@ public class DocumentIO
 	 */
 	public static Document stream(InputStream is) throws XMLParseException 
 	{
-		DocumentLoader dl = DocumentBuilder.getDOMLoader();
+		DocumentLoader dl = LoaderFactory.getDOMLoader();
 		Document doc = dl.parse(is);
 		return doc;
 	}
@@ -72,11 +72,11 @@ public class DocumentIO
 		switch(type)
 		{
 		case STREAM:
-			dl = DocumentBuilder.getStreamLoader();
+			dl = LoaderFactory.getStreamLoader();
 			break;
 		case DOM:
 		default:
-			dl = DocumentBuilder.getDOMLoader();
+			dl = LoaderFactory.getDOMLoader();
 			break;
 		}
 		Document doc = dl.parse(is);

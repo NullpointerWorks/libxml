@@ -1,6 +1,6 @@
 /*
  * Creative Commons - Attribution, Share Alike 4.0
- * Nullpointer Works (2020)
+ * Nullpointer Works (2021)
  * Use of this library is subject to license terms.
  */
 package exp.nullpointerworks.xml.io;
@@ -15,8 +15,6 @@ public interface DocumentLoader
 {
 	XMLLoaderType getLoaderType();
 	Document getDocument();
-	Document parse(String path) 
-			throws FileNotFoundException, XMLParseException;
-	Document parse(InputStream is) 
-			throws XMLParseException;
+	Document parse(String path) throws FileNotFoundException, XMLParseException;
+	Document parse(InputStream is) throws XMLParseException;
 }
