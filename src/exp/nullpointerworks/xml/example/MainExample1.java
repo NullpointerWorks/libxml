@@ -76,16 +76,28 @@ public class MainExample1
 		
 		/*
 		 * add some information to the document
+		 * 
+		 * setting the text on an element adds a Text object and sets 
+		 * its content. If an instance of a Text element is already
+		 * present, it will modify it's content instead.
+		 * 
+		 * In other words, the text on an element is always the first 
+		 * child element of the Text subclass.
 		 */
+		Element person = new Element("sometext");
+		person.setText("This is some example text.");
+		
 		Element root = doc.getRootElement();
-		
-		Element person = new Element();
-		
-		
 		root.addChild(person);
 		
-		
-		
-		
+		// don't forget to save
+		try
+		{
+			DocumentIO.write(doc, path, format);
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
