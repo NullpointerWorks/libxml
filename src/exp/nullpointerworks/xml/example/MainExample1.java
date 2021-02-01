@@ -6,12 +6,12 @@ import java.io.IOException;
 import exp.nullpointerworks.xml.Document;
 import exp.nullpointerworks.xml.Element;
 import exp.nullpointerworks.xml.Encoding;
+import exp.nullpointerworks.xml.FormatFactory;
 import exp.nullpointerworks.xml.LoaderFactory;
 import exp.nullpointerworks.xml.StandAlone;
 import exp.nullpointerworks.xml.Version;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
-import exp.nullpointerworks.xml.format.FormatFactory;
 import exp.nullpointerworks.xml.io.DocumentIO;
 import exp.nullpointerworks.xml.io.DocumentLoader;
 import exp.nullpointerworks.xml.prolog.Prolog;
@@ -27,14 +27,15 @@ public class MainExample1
 	{
 		/*
 		 * we need a path to the file, obviously
-		 * and when creating a new file we need a prolog and a formatting instance
+		 * when creating a document we need a prolog.
+		 * and when saving a document we need a formatting instance
 		 */
 		final String path = "bin/example1.xml";
-		final Format format = FormatFactory.getPrettyWindowsFormat();
 		final Prolog prolog = new XMLProlog(Version.V10, Encoding.UTF8, StandAlone.NO);
+		final Format format = FormatFactory.getPrettyWindowsFormat();
 		
 		/*
-		 * lets check if the file and directory exists. if not, make one
+		 * make a default file if it's not present
 		 */
 		File f = new File(path);
 		if (!f.exists())
@@ -59,6 +60,7 @@ public class MainExample1
 		}
 		
 		/*
+		 * add some information to an existing document
 		 * load an XML file into a Document object
 		 */
 		DocumentLoader dl = LoaderFactory.getDOMLoader();
@@ -75,8 +77,6 @@ public class MainExample1
 		}
 		
 		/*
-		 * add some information to the document
-		 * 
 		 * setting the text on an element adds a Text object and sets 
 		 * its content. If an instance of a Text element is already
 		 * present, it will modify it's content instead.

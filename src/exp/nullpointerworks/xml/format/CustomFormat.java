@@ -1,17 +1,17 @@
 /*
  * Creative Commons - Attribution, Share Alike 4.0
- * Nullpointer Works (2020)
+ * Nullpointer Works (2021)
  * Use of this library is subject to license terms.
  */
 package exp.nullpointerworks.xml.format;
 
-final class AbstractFormat implements Format 
+public class CustomFormat implements Format 
 {
-	private String space="",tab="",newline="";
+	private String space=" ",tab="",newline="";
 	
-	public AbstractFormat() {}
+	public CustomFormat() {}
 	
-	AbstractFormat(Format f)
+	public CustomFormat(Format f)
 	{
 		space = f.getSpace();
 		tab = f.getTab();
@@ -36,17 +36,17 @@ final class AbstractFormat implements Format
 		return newline;
 	}
 	
-	protected void setSpace(String string) 
+	public void setSpace(String string) 
 	{
 		space = string;
 	}
 	
-	protected void setTab(String string) 
+	public void setTab(String string) 
 	{
 		tab = string;
 	}
 	
-	protected void setNewLine(String string) 
+	public void setNewLine(String string) 
 	{
 		newline = string;
 	}
