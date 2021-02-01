@@ -2,7 +2,7 @@
  * Creative Commons - Attribution, Share Alike 4.0<br>
  * Nullpointer Works (2021)<br>
  * Using this library makes you subject to the license terms.<br>
- * @version 0.13.0 experimental
+ * @version 0.14.0 experimental
  * @author Michiel Drost - Nullpointer Works
  */
 module libnpw.xml
