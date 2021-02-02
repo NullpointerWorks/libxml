@@ -85,6 +85,7 @@ public class MainExample1
 		 * child element of the Text subclass.
 		 */
 		Element person = new Element("sometext");
+		person.addAttribute("stuff","someattribute");
 		person.setText("This is some example text.");
 		
 		Element root = doc.getRootElement();
