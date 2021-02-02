@@ -5,6 +5,8 @@
  */
 package exp.nullpointerworks.xml.io.sax;
 
+import exp.nullpointerworks.xml.Attributes;
+
 /**
  * 
  */
@@ -12,7 +14,9 @@ public interface SAXEventListener
 {
 	void onDocumentStart();
 	void onDocumentEnd();
+	void onDocumentProlog(Attributes attrs);
 
 	void onElementStart(String xmlPath, String eName, Attributes attrs);
 	void onElementEnd(String xmlPath, String eName);
+	void onCharacter(char c);
 }
