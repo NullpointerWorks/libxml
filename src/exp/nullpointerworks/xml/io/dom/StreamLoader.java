@@ -1,9 +1,9 @@
 /*
  * Creative Commons - Attribution, Share Alike 4.0
- * Nullpointer Works (2020)
+ * Nullpointer Works (2021)
  * Use of this library is subject to license terms.
  */
-package exp.nullpointerworks.xml.io;
+package exp.nullpointerworks.xml.io.dom;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +19,8 @@ import exp.nullpointerworks.xml.Element;
 import exp.nullpointerworks.xml.Text;
 import exp.nullpointerworks.xml.XMLBadPrologException;
 import exp.nullpointerworks.xml.XMLParseException;
+import exp.nullpointerworks.xml.io.DocumentLoader;
+import exp.nullpointerworks.xml.io.XMLLoaderType;
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
 
@@ -72,7 +74,7 @@ public class StreamLoader implements DocumentLoader
 		}
 		catch (IOException e) 
 		{
-			throw new XMLParseException();
+			throw new XMLParseException(e);
 		}
 		
 		try 
@@ -81,7 +83,16 @@ public class StreamLoader implements DocumentLoader
 		}
 		catch (IOException e) 
 		{
-			throw new XMLParseException();
+			throw new XMLParseException(e);
+		}
+		
+		try 
+		{
+			fis.close();
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
 		}
 		
 		return doc;
@@ -236,8 +247,8 @@ public class StreamLoader implements DocumentLoader
 		
 		if (line.startsWith("?"))
 		{
-			if (line.startsWith("? ")) throw new XMLBadPrologException();
-			if (!line.endsWith("?")) throw new XMLBadPrologException();
+			if (line.startsWith("? ")) throw new XMLBadPrologException(null);
+			if (!line.endsWith("?")) throw new XMLBadPrologException(null);
 			String[] tokens = line.split(" ");
 			String prologType = tokens[0];
 			Prolog pr = null;

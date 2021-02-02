@@ -1,6 +1,6 @@
 /*
  * Creative Commons - Attribution, Share Alike 4.0
- * Nullpointer Works (2020)
+ * Nullpointer Works (2021)
  * Use of this library is subject to license terms.
  */
 package exp.nullpointerworks.xml.io;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import exp.nullpointerworks.xml.Document;
-import exp.nullpointerworks.xml.LoaderFactory;
+import exp.nullpointerworks.xml.XMLLoaderFactory;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
 
@@ -24,7 +24,7 @@ public class DocumentIO
 	 */
 	public static Document read(String path) throws XMLParseException, IOException 
 	{
-		DocumentLoader dl = LoaderFactory.getDOMLoader();
+		DocumentLoader dl = XMLLoaderFactory.getLoader(XMLLoaderType.DOM);
 		Document doc = dl.parse(path);
 		return doc;
 	}
@@ -34,17 +34,7 @@ public class DocumentIO
 	 */
 	public static Document read(String path, XMLLoaderType type) throws XMLParseException, IOException 
 	{
-		DocumentLoader dl = null;
-		switch(type)
-		{
-		case STREAM:
-			dl = LoaderFactory.getStreamLoader();
-			break;
-		case DOM:
-		default:
-			dl = LoaderFactory.getDOMLoader();
-			break;
-		}
+		DocumentLoader dl = XMLLoaderFactory.getLoader(type);
 		Document doc = dl.parse(path);
 		return doc;
 	}
@@ -58,27 +48,7 @@ public class DocumentIO
 	 */
 	public static Document stream(InputStream is) throws XMLParseException 
 	{
-		DocumentLoader dl = LoaderFactory.getDOMLoader();
-		Document doc = dl.parse(is);
-		return doc;
-	}
-	
-	/**
-	 * stream using a specified loader
-	 */
-	public static Document stream(InputStream is, XMLLoaderType type) throws XMLParseException, IOException 
-	{
-		DocumentLoader dl = null;
-		switch(type)
-		{
-		case STREAM:
-			dl = LoaderFactory.getStreamLoader();
-			break;
-		case DOM:
-		default:
-			dl = LoaderFactory.getDOMLoader();
-			break;
-		}
+		DocumentLoader dl = XMLLoaderFactory.getLoader(XMLLoaderType.STREAM);
 		Document doc = dl.parse(is);
 		return doc;
 	}
