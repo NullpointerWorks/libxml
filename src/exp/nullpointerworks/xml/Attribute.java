@@ -56,6 +56,11 @@ public class Attribute
 		return value;
 	}
 
+	public String getString()
+	{
+		return getName()+"="+getValue();
+	}
+
 	public boolean hasValue()
 	{
 		return !value.equalsIgnoreCase("");
