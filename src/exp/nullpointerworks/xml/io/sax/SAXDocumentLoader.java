@@ -18,17 +18,17 @@ import exp.nullpointerworks.xml.io.XMLLoaderType;
 /**
  * Simple API for XML (SAX). Streamed unidirectional loading with events.
  */
-public class SAXLoader implements DocumentLoader, SAXEventListener
+public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 {
 	private SAXEventListener saxel;
 	private Document doc = null;
 	
-	public SAXLoader()
+	public SAXDocumentLoader()
 	{
 		saxel = this;
 	}
 	
-	public SAXLoader(SAXEventListener l)
+	public SAXDocumentLoader(SAXEventListener l)
 	{
 		saxel = l;
 	}

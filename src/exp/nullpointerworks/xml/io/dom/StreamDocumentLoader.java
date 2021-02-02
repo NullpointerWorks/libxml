@@ -27,16 +27,16 @@ import exp.nullpointerworks.xml.prolog.XMLProlog;
 /**
  * Document Object Model File Loader. This implementation streams the content of a file and then parses to create an document element structure. This method is less resource intensive than the regular DOM loader.
  */
-public class StreamLoader implements DocumentLoader
+public class StreamDocumentLoader implements DocumentLoader
 {
 	private Document doc;
 	
-	public StreamLoader()
+	public StreamDocumentLoader()
 	{
 		doc = new Document();
 	}
 	
-	public StreamLoader(Document doc)
+	public StreamDocumentLoader(Document doc)
 	{
 		if (doc==null) doc = new Document();
 		this.doc=doc;

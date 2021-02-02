@@ -28,16 +28,16 @@ import exp.nullpointerworks.xml.prolog.XMLProlog;
 /**
  * Document Object Model File Loader. Loads the entire file into memory and then parses to create an document element structure. The primary disadvantage is that it's resource intensive when parsing large files.
  */
-public class DOMLoader implements DocumentLoader
+public class DOMDocumentLoader implements DocumentLoader
 {
 	private Document doc;
 
-	public DOMLoader()
+	public DOMDocumentLoader()
 	{
 		doc = new Document();
 	}
 	
-	public DOMLoader(Document doc)
+	public DOMDocumentLoader(Document doc)
 	{
 		if (doc==null) doc = new Document();
 		this.doc=doc;

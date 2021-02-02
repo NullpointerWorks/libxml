@@ -9,14 +9,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import exp.nullpointerworks.xml.Document;
-import exp.nullpointerworks.xml.XMLLoaderFactory;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
+import exp.nullpointerworks.xml.io.dom.DOMDocumentLoader;
+import exp.nullpointerworks.xml.io.dom.StreamDocumentLoader;
 
 public class DocumentIO 
 {
 	// ========================================================================
-	// 		memory loading
+	// 		reading 
 	// ========================================================================
 	
 	/**
@@ -24,35 +25,21 @@ public class DocumentIO
 	 */
 	public static Document read(String path) throws XMLParseException, IOException 
 	{
-		DocumentLoader dl = XMLLoaderFactory.getLoader(XMLLoaderType.DOM);
+		DocumentLoader dl = new DOMDocumentLoader();
 		Document doc = dl.parse(path);
 		return doc;
 	}
-	
-	/**
-	 * load using a specified loader
-	 */
-	public static Document read(String path, XMLLoaderType type) throws XMLParseException, IOException 
-	{
-		DocumentLoader dl = XMLLoaderFactory.getLoader(type);
-		Document doc = dl.parse(path);
-		return doc;
-	}
-	
-	// ========================================================================
-	// 		stream loading
-	// ========================================================================
 	
 	/**
 	 * load using a DOM stream loader
 	 */
 	public static Document stream(InputStream is) throws XMLParseException 
 	{
-		DocumentLoader dl = XMLLoaderFactory.getLoader(XMLLoaderType.STREAM);
+		DocumentLoader dl = new StreamDocumentLoader();
 		Document doc = dl.parse(is);
 		return doc;
 	}
-
+	
 	// ========================================================================
 	// 		writing 
 	// ========================================================================
@@ -70,5 +57,4 @@ public class DocumentIO
 		DocumentWriter dw = new DocumentWriter(format);
 		dw.write(doc, path);
 	}
-	
 }
