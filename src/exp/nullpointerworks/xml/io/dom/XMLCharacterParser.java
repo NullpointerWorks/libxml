@@ -1,158 +1,129 @@
 package exp.nullpointerworks.xml.io.dom;
 
-import com.nullpointerworks.util.StringUtil;
-
 import exp.nullpointerworks.xml.Attribute;
-import exp.nullpointerworks.xml.Document;
-import exp.nullpointerworks.xml.Element;
+import exp.nullpointerworks.xml.Attributes;
 import exp.nullpointerworks.xml.XMLBadPrologException;
 import exp.nullpointerworks.xml.XMLParseException;
-import exp.nullpointerworks.xml.prolog.Prolog;
-import exp.nullpointerworks.xml.prolog.XMLProlog;
 
 abstract class XMLCharacterParser 
 {
 	private String line = "";
 	private boolean hasTag = false;
-	private boolean hasProlog = false;
-	private Element root = null;
 	
-	public void init()
+	public void reset()
 	{
 		line = "";
 		hasTag = false;
-		hasProlog = false;
-		root = null;
 	}
 	
-	public void nextCharacter(Document doc, String chr) throws XMLParseException
+	abstract void onDocumentStart();
+	abstract void onDocumentEnd();
+	abstract void onDocumentProlog(Attributes attrs);
+	abstract void onElementStart(String eName, Attributes attrs);
+	abstract void onElementEnd(String eName);
+	abstract void onCharacter(char c);
+	
+	public void nextCharacter(String chr) throws XMLParseException
 	{
 		if (isNewTag(chr))
 		{
-			
+			hasTag = true;
 			return;
 		}
 		
+		if (hasTag)
 		if (isEndTag(chr))
 		{
-			
-			
-			
+			String cline = compact(line);
+			if (isProlog(cline))
+			{
+				parseProlog(cline);
+			}
+			else
+			{
+				parseTag(cline);
+			}
 			return;
 		}
 		
 		line += chr;
 	}
 	
-	private Element parseTag(Element root, String line) throws XMLParseException 
-	{
-		line = StringUtil.compact(line);
-		if (line.equals("")) return root;
-		
-		String[] tokens = line.split(" ");
-		String elName = tokens[0];
-		
-		/*
-		 * self-closing tags have to children and return the root
-		 */
-		if (isSelfClosing(elName))
-		{
-			elName = elName.substring(0, elName.length()-1);
-			//Log.out("new closing tag:   "+elName);
-			Element el = makeElement(elName, tokens);
-			if (root != null)
-			{
-				root.addChild(el);
-			}
-			else
-			{
-				// error. if there's no root, return the element. it's the new root
-				return el;
-			}
-			
-			return root;
-		}
-		
-		/*
-		 * starting tags
-		 */
-		if (isTagOpening(elName))
-		{
-			//Log.out("new tag:           "+elName);
-			Element el = makeElement(elName, tokens);
-			if (root != null)
-			{
-				root.addChild(el);
-			}
-			else
-			{
-				// error
-			}
-			
-			return el;
-		}
-		
-		/*
-		 * closing tag
-		 */
-		if (isTagClosing(elName))
-		{
-			//Log.out("closing tag:       "+elName);
-			if (root!=null)
-			{
-				if (root.getParent()!=null)
-					return root.getParent();
-			}
-			else
-			{
-				// error
-			}
-			
-			return root;
-		}
-		
-		/*
-		 * default
-		 */
-		return root;
-	}
+	// ====================================================================
 	
-	private Element makeElement(String elementName, String[] tokens)
+	private void parseProlog(String line) throws XMLBadPrologException 
 	{
-		Element el = new Element(elementName);
-		for (int i=1,l=tokens.length; i<l; i++)
-		{
-			String att = tokens[i];
-			el.addAttribute( new Attribute().setAttribute(att) );
-		}
-		return el;
-	}
-	
-	private void parseProlog(Document doc, String line) throws XMLBadPrologException 
-	{
-		line = StringUtil.compact(line);
-		
 		if (line.startsWith("?"))
 		{
 			if (line.startsWith("? ")) throw new XMLBadPrologException(null);
 			if (!line.endsWith("?")) throw new XMLBadPrologException(null);
+			
+			Attributes attrs = new Attributes();
 			String[] tokens = line.split(" ");
 			String prologType = tokens[0];
-			Prolog pr = null;
 			
 			if (prologType.equalsIgnoreCase("?xml"))
 			{
-				pr = new XMLProlog();
 				for (int i=1,l=tokens.length-1; i<l; i++)
 				{
 					String att = tokens[i];
-					pr.addAttribute( new Attribute().setAttribute(att) );
+					attrs.addAttribute( new Attribute().setAttribute(att) );
 				}
 			}
 			
-			if (pr!=null)
-				doc.setProlog(pr);
+			onDocumentProlog(attrs);
 		}
+	}
+	
+	private void parseTag(String line) 
+	{
+		if (isTagOpening(line))
+		{
+			String tagName = line.split(" ")[0];
+			Attributes attrs = findAttributes(line);
+			onElementStart(tagName, attrs);
+			return;
+		}
+		
+		if (isTagClosing(line))
+		{
+			String tagName = line.substring(1).trim();
+			onElementEnd(tagName);
+			return;
+		}
+		
+		if (isSelfClosing(line))
+		{
+			String tagName = line.substring(0,line.length()-1).trim();
+			Attributes attrs = findAttributes(line);
+			onElementStart(tagName, attrs);
+			onElementEnd(tagName);
+		}
+	}
+	
+	private Attributes findAttributes(String line) 
+	{
+		Attributes attrs = new Attributes();
+		String[] tokens = line.split(" ");
+		for (int i=1,l=tokens.length; i<l; i++)
+		{
+			String att = tokens[i];
+			String[] t = att.split("=");
+			if (t.length < 2) return null;
+			if (t[0].length() < 1) return null;
+			Attribute a = new Attribute(t[0], t[1]);
+			attrs.addAttribute(a);
+		}
+		return attrs;
+	}
+	
+	private String compact(String line) 
+	{
+		line = line.replace("\t", " ");
+		line = line.trim().replaceAll("\\s{2,}", " ");
+		line = line.replace(" =", "=");
+		line = line.replace("= ", "=");
+		return line;
 	}
 	
 	private boolean isNewTag(String chr)
@@ -178,5 +149,10 @@ abstract class XMLCharacterParser
 	private boolean isTagClosing(String text)
 	{
 		return text.startsWith("/");
+	}
+	
+	private boolean isProlog(String text)
+	{
+		return text.startsWith("?xml");
 	}
 }

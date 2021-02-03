@@ -286,6 +286,6 @@ public class SAXDocumentLoader implements SAXLoader, SAXEventListener
 	
 	private boolean isProlog(String text)
 	{
-		return text.contains("?");
+		return text.startsWith("?xml");
 	}
 }
