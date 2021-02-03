@@ -26,6 +26,7 @@ abstract class CharacterParser
 	{
 		if (isNewTag(chr))
 		{
+			line = "";
 			hasTag = true;
 			return;
 		}

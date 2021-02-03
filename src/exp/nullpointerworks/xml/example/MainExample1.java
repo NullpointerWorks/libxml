@@ -12,8 +12,8 @@ import exp.nullpointerworks.xml.Version;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
 import exp.nullpointerworks.xml.io.DocumentWriter;
-import exp.nullpointerworks.xml.io.DOMLoader;
 import exp.nullpointerworks.xml.io.dom.DOMDocumentLoader;
+import exp.nullpointerworks.xml.io.DOMLoader;
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
 
@@ -88,6 +88,13 @@ public class MainExample1
 		Element el = new Element("sometext");
 		el.addAttribute("stuff","someattribute");
 		el.setText("This is some example text.");
+		
+		/*
+		 * nest an element in another.
+		 */
+		Element elm = new Element("moretext");
+		elm.setText("This is some more example text.");
+		el.addChild(elm);
 		
 		Element root = doc.getRootElement();
 		root.addChild(el);
