@@ -15,28 +15,17 @@ import java.util.List;
 
 import exp.nullpointerworks.xml.Attribute;
 import exp.nullpointerworks.xml.Attributes;
-import exp.nullpointerworks.xml.Document;
 import exp.nullpointerworks.xml.XMLBadPrologException;
 import exp.nullpointerworks.xml.XMLParseException;
-import exp.nullpointerworks.xml.io.DocumentLoader;
-import exp.nullpointerworks.xml.io.XMLLoaderType;
+import exp.nullpointerworks.xml.io.SAXLoader;
 
 /**
  * Simple API for XML (SAX). Streamed unidirectional loading with events.
  */
-public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
+public class SAXDocumentLoader implements SAXLoader, SAXEventListener
 {
-	private SAXDocumentBuilder saxdb;
 	private List<SAXEventListener> saxel;
 	private TagPath tagPath;
-	
-	public SAXDocumentLoader()
-	{
-		tagPath = new TagPath();
-		saxel = new ArrayList<SAXEventListener>();
-		saxdb = new SAXDocumentBuilder();
-		saxel.add(saxdb);
-	}
 	
 	public SAXDocumentLoader(SAXEventListener l)
 	{
@@ -45,29 +34,34 @@ public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 		saxel.add(l);
 	}
 	
-	@Override
-	public Document getDocument() 
+	// ===============================================================================
+	
+	public void addEventListener(SAXEventListener el)
 	{
-		return saxdb.getDocument();
+		if (!saxel.contains(el)) saxel.add(el);
+	}
+	
+	public void removeEventListener(SAXEventListener el)
+	{
+		if (saxel.contains(el)) saxel.remove(el);
+	}
+	
+	public void clearEventListeners()
+	{
+		saxel.clear();
 	}
 	
 	@Override
-	public XMLLoaderType getLoaderType() 
-	{
-		return XMLLoaderType.SAX;
-	}
-	
-	@Override
-	public Document parse(String path) throws FileNotFoundException, XMLParseException 
+	public void parse(String path) throws FileNotFoundException, XMLParseException 
 	{
 		File lfile = new File(path);
 		if (!lfile.exists()) throw new FileNotFoundException();
 	    InputStream stream = new FileInputStream(lfile);
-		return parse(stream);
+		parse(stream);
 	}
 	
 	@Override
-	public Document parse(InputStream fis) throws XMLParseException
+	public void parse(InputStream fis) throws XMLParseException
 	{
 		if (saxel == null) throw new XMLParseException(null);
 		
@@ -91,25 +85,9 @@ public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 		{
 			e.printStackTrace();
 		}
-		return saxdb.getDocument();
 	}
 	
 	// ===============================================================================
-
-	public void addSAXEventListener(SAXEventListener el)
-	{
-		if (!saxel.contains(el)) saxel.add(el);
-	}
-	
-	public void removeSAXEventListener(SAXEventListener el)
-	{
-		if (saxel.contains(el)) saxel.remove(el);
-	}
-	
-	public void clearSAXEventListeners()
-	{
-		saxel.clear();
-	}
 	
 	@Override
 	public void onDocumentStart() 

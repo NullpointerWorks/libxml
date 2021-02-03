@@ -19,15 +19,14 @@ import exp.nullpointerworks.xml.Element;
 import exp.nullpointerworks.xml.Text;
 import exp.nullpointerworks.xml.XMLBadPrologException;
 import exp.nullpointerworks.xml.XMLParseException;
-import exp.nullpointerworks.xml.io.DocumentLoader;
-import exp.nullpointerworks.xml.io.XMLLoaderType;
+import exp.nullpointerworks.xml.io.DOMLoader;
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
 
 /**
  * Document Object Model File Loader. This implementation streams the content of a file and then parses to create an document element structure. This method is less resource intensive than the regular DOM loader.
  */
-public class StreamDocumentLoader implements DocumentLoader
+public class StreamDocumentLoader implements DOMLoader
 {
 	private Document doc;
 	
@@ -36,22 +35,23 @@ public class StreamDocumentLoader implements DocumentLoader
 		doc = new Document();
 	}
 	
-	public StreamDocumentLoader(Document doc)
+	public StreamDocumentLoader(Document d)
 	{
-		if (doc==null) doc = new Document();
-		this.doc=doc;
+		this();
+		if (d!=null) doc = d;
+		setDocument(doc);
+	}
+	
+	@Override
+	public void setDocument(Document d)
+	{
+		if (d!=null) doc = d;
 	}
 	
 	@Override
 	public Document getDocument()
 	{
-		return null;
-	}
-	
-	@Override
-	public XMLLoaderType getLoaderType() 
-	{
-		return XMLLoaderType.STREAM;
+		return doc;
 	}
 	
 	@Override

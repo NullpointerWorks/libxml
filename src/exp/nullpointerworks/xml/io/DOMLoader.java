@@ -11,10 +11,10 @@ import java.io.InputStream;
 import exp.nullpointerworks.xml.Document;
 import exp.nullpointerworks.xml.XMLParseException;
 
-public interface DocumentLoader
+public interface DOMLoader
 {
+	void setDocument(Document d);
 	Document getDocument();
-	XMLLoaderType getLoaderType();
 	Document parse(String path) throws FileNotFoundException, XMLParseException;
 	Document parse(InputStream is) throws XMLParseException;
 }

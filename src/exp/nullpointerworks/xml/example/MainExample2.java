@@ -2,20 +2,30 @@ package exp.nullpointerworks.xml.example;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.nullpointerworks.util.pattern.Iterator;
+
+import exp.nullpointerworks.xml.Attribute;
+import exp.nullpointerworks.xml.Attributes;
 import exp.nullpointerworks.xml.Document;
+import exp.nullpointerworks.xml.Element;
 import exp.nullpointerworks.xml.FormatFactory;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
 import exp.nullpointerworks.xml.io.DocumentIO;
-import exp.nullpointerworks.xml.io.DocumentLoader;
+import exp.nullpointerworks.xml.io.SAXLoader;
 import exp.nullpointerworks.xml.io.sax.SAXDocumentLoader;
+import exp.nullpointerworks.xml.io.sax.SAXEventListener;
+import exp.nullpointerworks.xml.prolog.Prolog;
+import exp.nullpointerworks.xml.prolog.XMLProlog;
 
 /**
  * 
  * @author Michiel Drost - Nullpointer Works
  */
-public class MainExample2
+public class MainExample2 implements SAXEventListener
 {
 	public static void main(String[] args) 
 	{
@@ -28,19 +38,20 @@ public class MainExample2
 	
 	public MainExample2()
 	{
+		final String path1 = "bin/example1.xml";
+		final String path2 = "bin/example2.xml";
+		
 		/*
 		 * load the file from the first example using a SAX event loader
 		 * 
 		 * when not specifying your own event listener a default will be used.
 		 * this stored a DOM object 
 		 */
-		final String path1 = "bin/example1.xml";
-		final String path2 = "bin/example2.xml";
-		DocumentLoader dl = new SAXDocumentLoader();
+		SAXLoader sl = new SAXDocumentLoader(this);
 		
 		try 
 		{
-			dl.parse(path1);
+			sl.parse(path1);
 		} 
 		catch (FileNotFoundException | XMLParseException e) 
 		{
@@ -48,16 +59,80 @@ public class MainExample2
 			return;
 		}
 		
-		Document doc = dl.getDocument();
-		
 		final Format format = FormatFactory.getPrettyWindowsFormat();
 		try
 		{
-			DocumentIO.write(doc, path2, format);
+			DocumentIO.write(document, path2, format);
 		} 
 		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	private Document document;
+	private Element current;
+	private List<Element> path = new ArrayList<Element>();
+	
+	@Override
+	public void onDocumentStart() 
+	{
+		document = new Document();
+		current = new Element("xml");
+		
+		path.clear();
+		path.add(current);
+	}
+	
+	@Override
+	public void onDocumentEnd() 
+	{
+		Element root = path.get(0).getChild(0);
+		document.setRootElement(root);
+	}
+	
+	@Override
+	public void onDocumentProlog(Attributes attrs) 
+	{
+		Prolog pr = new XMLProlog();
+		Iterator<Attribute> it = attrs.getIterator();
+		while (it.hasNext())
+		{
+			Attribute a = it.getNext();
+			pr.addAttribute(a);
+		}
+		document.setProlog(pr);
+	}
+
+	@Override
+	public void onElementStart(String xmlPath, String eName, Attributes attrs) 
+	{
+		Element el = new Element(eName);
+		Iterator<Attribute> it = attrs.getIterator();
+		while (it.hasNext())
+		{
+			Attribute a = it.getNext();
+			el.addAttribute(a);
+		}
+		current.addChild(el);
+		current = el;
+		path.add(el);
+	}
+	
+	@Override
+	public void onElementEnd(String xmlPath, String eName) 
+	{
+		path.remove( path.size()-1 );
+		current = path.get( path.size()-1 );
+	}
+	
+	@Override
+	public void onCharacter(String xmlPath, char c)
+	{
+		String s = ""+c;
+		if (s.equals("\t")) return;
+		if (s.equals("\r")) return;
+		if (s.equals("\n")) return;
+		current.setText( current.getText() + s );
 	}
 }

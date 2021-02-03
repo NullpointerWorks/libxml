@@ -12,7 +12,7 @@ import exp.nullpointerworks.xml.Version;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
 import exp.nullpointerworks.xml.io.DocumentIO;
-import exp.nullpointerworks.xml.io.DocumentLoader;
+import exp.nullpointerworks.xml.io.DOMLoader;
 import exp.nullpointerworks.xml.io.dom.DOMDocumentLoader;
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
@@ -63,7 +63,7 @@ public class MainExample1
 		 * add some information to an existing document
 		 * load an XML file into a Document object
 		 */
-		DocumentLoader dl = new DOMDocumentLoader();
+		DOMLoader dl = new DOMDocumentLoader();
 		Document doc = null;
 		
 		try

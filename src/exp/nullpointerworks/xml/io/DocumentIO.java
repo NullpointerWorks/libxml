@@ -25,7 +25,7 @@ public class DocumentIO
 	 */
 	public static Document read(String path) throws XMLParseException, IOException 
 	{
-		DocumentLoader dl = new DOMDocumentLoader();
+		DOMLoader dl = new DOMDocumentLoader();
 		Document doc = dl.parse(path);
 		return doc;
 	}
@@ -35,7 +35,7 @@ public class DocumentIO
 	 */
 	public static Document stream(InputStream is) throws XMLParseException 
 	{
-		DocumentLoader dl = new StreamDocumentLoader();
+		DOMLoader dl = new StreamDocumentLoader();
 		Document doc = dl.parse(is);
 		return doc;
 	}

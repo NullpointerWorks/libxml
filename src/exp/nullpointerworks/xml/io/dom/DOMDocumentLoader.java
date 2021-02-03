@@ -20,15 +20,14 @@ import exp.nullpointerworks.xml.Element;
 import exp.nullpointerworks.xml.Text;
 import exp.nullpointerworks.xml.XMLBadPrologException;
 import exp.nullpointerworks.xml.XMLParseException;
-import exp.nullpointerworks.xml.io.DocumentLoader;
-import exp.nullpointerworks.xml.io.XMLLoaderType;
+import exp.nullpointerworks.xml.io.DOMLoader;
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
 
 /**
  * Document Object Model File Loader. Loads the entire file into memory and then parses to create an document element structure. The primary disadvantage is that it's resource intensive when parsing large files.
  */
-public class DOMDocumentLoader implements DocumentLoader
+public class DOMDocumentLoader implements DOMLoader
 {
 	private Document doc;
 
@@ -37,22 +36,23 @@ public class DOMDocumentLoader implements DocumentLoader
 		doc = new Document();
 	}
 	
-	public DOMDocumentLoader(Document doc)
+	public DOMDocumentLoader(Document d)
 	{
-		if (doc==null) doc = new Document();
-		this.doc=doc;
+		this();
+		if (d!=null) doc = d;
+		setDocument(doc);
+	}
+	
+	@Override
+	public void setDocument(Document d)
+	{
+		if (d!=null) doc = d;
 	}
 	
 	@Override
 	public Document getDocument()
 	{
 		return doc;
-	}
-	
-	@Override
-	public XMLLoaderType getLoaderType() 
-	{
-		return XMLLoaderType.DOM;
 	}
 	
 	@Override
@@ -268,27 +268,27 @@ public class DOMDocumentLoader implements DocumentLoader
 		}
 	}
 	
-	protected boolean isNewTag(String chr)
+	private boolean isNewTag(String chr)
 	{
 		return chr.equalsIgnoreCase("<");
 	}
 	
-	protected boolean isEndTag(String chr)
+	private boolean isEndTag(String chr)
 	{
 		return chr.equalsIgnoreCase(">");
 	}
 	
-	protected boolean isSelfClosing(String text)
+	private boolean isSelfClosing(String text)
 	{
 		return text.endsWith("/");
 	}
 	
-	protected boolean isTagOpening(String text)
+	private boolean isTagOpening(String text)
 	{
 		return !text.contains("/");
 	}
 	
-	protected boolean isTagClosing(String text)
+	private boolean isTagClosing(String text)
 	{
 		return text.startsWith("/");
 	}
