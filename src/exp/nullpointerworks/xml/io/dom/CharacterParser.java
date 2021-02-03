@@ -1,3 +1,8 @@
+/*
+ * Creative Commons - Attribution, Share Alike 4.0
+ * Nullpointer Works (2021)
+ * Use of this library is subject to license terms.
+ */
 package exp.nullpointerworks.xml.io.dom;
 
 import exp.nullpointerworks.xml.Attribute;
@@ -5,25 +10,19 @@ import exp.nullpointerworks.xml.Attributes;
 import exp.nullpointerworks.xml.XMLBadPrologException;
 import exp.nullpointerworks.xml.XMLParseException;
 
-abstract class XMLCharacterParser 
+abstract class CharacterParser 
 {
 	private String line = "";
 	private boolean hasTag = false;
-	
-	public void reset()
-	{
-		line = "";
-		hasTag = false;
-	}
 	
 	abstract void onDocumentStart();
 	abstract void onDocumentEnd();
 	abstract void onDocumentProlog(Attributes attrs);
 	abstract void onElementStart(String eName, Attributes attrs);
 	abstract void onElementEnd(String eName);
-	abstract void onCharacter(char c);
+	abstract void onCharacter(String c);
 	
-	public void nextCharacter(String chr) throws XMLParseException
+	protected void nextCharacter(String chr) throws XMLParseException
 	{
 		if (isNewTag(chr))
 		{
@@ -32,21 +31,29 @@ abstract class XMLCharacterParser
 		}
 		
 		if (hasTag)
-		if (isEndTag(chr))
 		{
-			String cline = compact(line);
-			if (isProlog(cline))
+			if (isEndTag(chr))
 			{
-				parseProlog(cline);
+				String cline = compact(line);
+				if (isProlog(cline))
+				{
+					parseProlog(cline);
+				}
+				else
+				{
+					parseTag(cline);
+				}
+				
+				line = "";
+				hasTag = false;
+				return;
 			}
-			else
-			{
-				parseTag(cline);
-			}
-			return;
+			line += chr;
 		}
-		
-		line += chr;
+		else
+		{
+			onCharacter(chr);
+		}
 	}
 	
 	// ====================================================================
@@ -55,8 +62,8 @@ abstract class XMLCharacterParser
 	{
 		if (line.startsWith("?"))
 		{
-			if (line.startsWith("? ")) throw new XMLBadPrologException(null);
-			if (!line.endsWith("?")) throw new XMLBadPrologException(null);
+			if (line.startsWith("? ")) throw new XMLBadPrologException("");
+			if (!line.endsWith("?")) throw new XMLBadPrologException("");
 			
 			Attributes attrs = new Attributes();
 			String[] tokens = line.split(" ");

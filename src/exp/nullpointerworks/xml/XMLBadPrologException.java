@@ -13,4 +13,8 @@ public class XMLBadPrologException extends XMLParseException
 	{
 		super(e);
 	}
+	public XMLBadPrologException(String msg) 
+	{
+		super(msg);
+	}
 }

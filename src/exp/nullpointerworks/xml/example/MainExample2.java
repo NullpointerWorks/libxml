@@ -14,7 +14,7 @@ import exp.nullpointerworks.xml.Element;
 import exp.nullpointerworks.xml.FormatFactory;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
-import exp.nullpointerworks.xml.io.DocumentIO;
+import exp.nullpointerworks.xml.io.DocumentWriter;
 import exp.nullpointerworks.xml.io.SAXLoader;
 import exp.nullpointerworks.xml.io.sax.SAXDocumentLoader;
 import exp.nullpointerworks.xml.io.sax.SAXEventListener;
@@ -60,9 +60,12 @@ public class MainExample2 implements SAXEventListener
 		}
 		
 		final Format format = FormatFactory.getPrettyWindowsFormat();
+		final DocumentWriter dw = new DocumentWriter(format);
+		
+		// safe a copy of the read file
 		try
 		{
-			DocumentIO.write(document, path2, format);
+			dw.write(document, path2);
 		} 
 		catch (IOException e)
 		{
@@ -72,22 +75,21 @@ public class MainExample2 implements SAXEventListener
 	
 	private Document document;
 	private Element current;
-	private List<Element> path = new ArrayList<Element>();
+	private List<Element> elementPath = new ArrayList<Element>();
 	
 	@Override
 	public void onDocumentStart() 
 	{
 		document = new Document();
 		current = new Element("xml");
-		
-		path.clear();
-		path.add(current);
+		elementPath.clear();
+		elementPath.add(current);
 	}
 	
 	@Override
 	public void onDocumentEnd() 
 	{
-		Element root = path.get(0).getChild(0);
+		Element root = elementPath.get(0).getChild(0);
 		document.setRootElement(root);
 	}
 	
@@ -116,14 +118,14 @@ public class MainExample2 implements SAXEventListener
 		}
 		current.addChild(el);
 		current = el;
-		path.add(el);
+		elementPath.add(el);
 	}
 	
 	@Override
 	public void onElementEnd(String xmlPath, String eName) 
 	{
-		path.remove( path.size()-1 );
-		current = path.get( path.size()-1 );
+		elementPath.remove( elementPath.size()-1 );
+		current = elementPath.get( elementPath.size()-1 );
 	}
 	
 	@Override
@@ -133,6 +135,9 @@ public class MainExample2 implements SAXEventListener
 		if (s.equals("\t")) return;
 		if (s.equals("\r")) return;
 		if (s.equals("\n")) return;
-		current.setText( current.getText() + s );
+		
+		String t = current.getText();
+		if (t==null)t="";
+		current.setText( t + s );
 	}
 }

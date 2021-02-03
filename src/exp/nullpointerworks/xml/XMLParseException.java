@@ -13,4 +13,9 @@ public class XMLParseException extends Exception
 	{
 		super(e);
 	}
+	
+	public XMLParseException(String msg) 
+	{
+		super(msg);
+	}
 }

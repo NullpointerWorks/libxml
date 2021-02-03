@@ -11,9 +11,8 @@ import exp.nullpointerworks.xml.StandAlone;
 import exp.nullpointerworks.xml.Version;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
-import exp.nullpointerworks.xml.io.DocumentIO;
+import exp.nullpointerworks.xml.io.DocumentWriter;
 import exp.nullpointerworks.xml.io.DOMLoader;
-import exp.nullpointerworks.xml.io.dom.DOM2DocumentLoader;
 import exp.nullpointerworks.xml.io.dom.DOMDocumentLoader;
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
@@ -34,6 +33,7 @@ public class MainExample1
 		final String path = "bin/example1.xml";
 		final Prolog prolog = new XMLProlog(Version.V10, Encoding.UTF8, StandAlone.NO);
 		final Format format = FormatFactory.getPrettyWindowsFormat();
+		final DocumentWriter dw = new DocumentWriter(format);
 		
 		/*
 		 * make a default file if it's not present
@@ -51,7 +51,7 @@ public class MainExample1
 			// write the document to disk using a formatting object
 			try
 			{
-				DocumentIO.write(doc, path, format);
+				dw.write(doc, path);
 			} 
 			catch (IOException e)
 			{
@@ -64,7 +64,7 @@ public class MainExample1
 		 * add some information to an existing document
 		 * load an XML file into a Document object
 		 */
-		DOMLoader dl = new DOM2DocumentLoader();
+		DOMLoader dl = new DOMDocumentLoader();
 		Document doc = null;
 		
 		try
@@ -95,7 +95,7 @@ public class MainExample1
 		// don't forget to save
 		try
 		{
-			DocumentIO.write(doc, path, format);
+			dw.write(doc, path);
 		} 
 		catch (IOException e)
 		{

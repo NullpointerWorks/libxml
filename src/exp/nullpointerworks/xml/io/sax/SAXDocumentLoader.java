@@ -63,8 +63,6 @@ public class SAXDocumentLoader implements SAXLoader, SAXEventListener
 	@Override
 	public void parse(InputStream fis) throws XMLParseException
 	{
-		if (saxel == null) throw new XMLParseException(null);
-		
 		tagPath.push("xml");
 		onDocumentStart();
 		try 
@@ -145,12 +143,50 @@ public class SAXDocumentLoader implements SAXLoader, SAXEventListener
 	
 	// ===============================================================================
 	
+	private void parseStream(InputStream fis) throws XMLBadPrologException, IOException
+	{
+		String line = "";
+		boolean hasTag = false;
+		while (fis.available() > 0) 
+		{
+			char c = (char)fis.read();
+			String s = ""+c;
+			
+			if (isNewTag(s))
+			{
+				hasTag = true;
+				continue;
+			}
+			
+			if (isEndTag(s))
+			if (hasTag)
+			{
+				line = compact(line);
+				if (isProlog(line))
+				{
+					parseProlog(line);
+				}
+				else
+				{
+					parseTag(line);
+				}
+				
+				line = "";
+				hasTag = false;
+				continue;
+			}
+			
+			if (hasTag) line += s;
+			else onCharacter(tagPath.getPath(),c);
+		}
+	}
+	
 	private void parseProlog(String line) throws XMLBadPrologException 
 	{
 		if (line.startsWith("?"))
 		{
-			if (line.startsWith("? ")) throw new XMLBadPrologException(null);
-			if (!line.endsWith("?")) throw new XMLBadPrologException(null);
+			if (line.startsWith("? ")) throw new XMLBadPrologException("");
+			if (!line.endsWith("?")) throw new XMLBadPrologException("");
 			
 			Attributes attrs = new Attributes();
 			String[] tokens = line.split(" ");
@@ -210,44 +246,6 @@ public class SAXDocumentLoader implements SAXLoader, SAXEventListener
 			attrs.addAttribute(a);
 		}
 		return attrs;
-	}
-	
-	private void parseStream(InputStream fis) throws XMLBadPrologException, IOException
-	{
-		String line = "";
-		boolean hasTag = false;
-		while (fis.available() > 0) 
-		{
-			char c = (char)fis.read();
-			String s = ""+c;
-			
-			if (isNewTag(s))
-			{
-				hasTag = true;
-				continue;
-			}
-			
-			if (isEndTag(s))
-			if (hasTag)
-			{
-				line = compact(line);
-				if (isProlog(line))
-				{
-					parseProlog(line);
-				}
-				else
-				{
-					parseTag(line);
-				}
-				
-				line = "";
-				hasTag = false;
-				continue;
-			}
-			
-			if (hasTag) line += s;
-			else onCharacter(tagPath.getPath(),c);
-		}
 	}
 	
 	private String compact(String line) 

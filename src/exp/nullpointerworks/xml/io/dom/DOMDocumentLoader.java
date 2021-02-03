@@ -8,55 +8,42 @@ package exp.nullpointerworks.xml.io.dom;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.nullpointerworks.util.StringUtil;
-import com.nullpointerworks.util.file.textfile.TextFile;
-import com.nullpointerworks.util.file.textfile.TextFileParser;
+import com.nullpointerworks.util.pattern.Iterator;
 
 import exp.nullpointerworks.xml.Attribute;
+import exp.nullpointerworks.xml.Attributes;
 import exp.nullpointerworks.xml.Document;
 import exp.nullpointerworks.xml.Element;
-import exp.nullpointerworks.xml.Text;
-import exp.nullpointerworks.xml.XMLBadPrologException;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.io.DOMLoader;
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
 
-/**
- * Document Object Model File Loader. Loads the entire file into memory and then parses to create an document element structure. The primary disadvantage is that it's resource intensive when parsing large files.
- */
-public class DOMDocumentLoader implements DOMLoader
+public class DOMDocumentLoader extends CharacterParser implements DOMLoader
 {
-	private Document doc;
-
-	public DOMDocumentLoader()
-	{
-		doc = new Document();
-	}
-	
-	public DOMDocumentLoader(Document d)
-	{
-		this();
-		if (d!=null) doc = d;
-		setDocument(doc);
-	}
+	private List<Element> path = new ArrayList<Element>();
+	private Document document;
+	private Element current;
 	
 	@Override
 	public void setDocument(Document d)
 	{
-		if (d!=null) doc = d;
+		if (d!=null) document = d;
 	}
 	
 	@Override
 	public Document getDocument()
 	{
-		return doc;
+		return document;
 	}
 	
 	@Override
-	public Document parse(String path) throws FileNotFoundException, XMLParseException
+	public Document parse(String path) throws FileNotFoundException, XMLParseException 
 	{
 		File initialFile = new File(path);
 	    InputStream stream;
@@ -65,231 +52,103 @@ public class DOMDocumentLoader implements DOMLoader
 	}
 	
 	@Override
-	public Document parse(InputStream is) throws XMLParseException
+	public Document parse(InputStream fis) throws XMLParseException
 	{
-		TextFile tf = TextFileParser.stream(is);
-		Document doc = toDocument(tf);
-		tf.clear();
-		return doc;
+		onDocumentStart();
+		
+		try 
+		{
+			parseContent(document, fis);
+		}
+		catch (IOException e) 
+		{
+			throw new XMLParseException(e);
+		}
+		
+		try 
+		{
+			fis.close();
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		onDocumentEnd();
+		return document;
 	}
 	
-	/*
-	 * =========================================
-	 * reading code
-	 * =========================================
-	 */
-	
-	/**
-	 * @throws XMLElementParseException 
-	 */
-	private Document toDocument(TextFile tf) throws XMLParseException
+	private void parseContent(Document doc, InputStream fis) throws XMLParseException, IOException
 	{
-		String[] lines = tf.getLines();
-		String documentLine = "";
-		for (String line : lines)
+		while (fis.available() > 0) 
 		{
-			line = line.trim();
-			documentLine += line;
-		}
-		
-		String[] characters = documentLine.split("");
-		int i=0,l=characters.length;
-		String line = "";
-		
-		/*
-		 * construct prolog tag
-		 */
-		boolean hasTag = false;
-		for (;i<l;i++)
-		{
-			String chr = characters[i];
-			if (isNewTag(chr))
-			{
-				hasTag = true;
-				continue;
-			}
-			if (isEndTag(chr))
-			if (hasTag)
-			{
-				parseProlog(doc, line);
-				break;
-			}
-			line += chr;
-		}
-		
-		/*
-		 * construct xml data
-		 */
-		line = "";
-		Element root = null;
-		for (;i<l;i++)
-		{
-			String chr = characters[i];
-			
-			if (isNewTag(chr))
-			{
-				if (line.length() > 0) 
-				{
-					if (root!=null) 
-					{
-						root.addChild( new Text(line) );
-					}
-					else
-					{
-						// error
-					}
-					line = "";
-				}
-				continue;
-			}
-			
-			if (isEndTag(chr))
-			{
-				root = parseTag(root, line);
-				line = "";
-				continue;
-			}
-			
-			line += chr;
-		}
-		
-		doc.setRootElement(root);
-		return doc;
-	}
-	
-	private Element parseTag(Element root, String line) throws XMLParseException 
-	{
-		line = StringUtil.compact(line);
-		if (line.equals("")) return root;
-		
-		String[] tokens = line.split(" ");
-		String elName = tokens[0];
-		
-		/*
-		 * self-closing tags have to children and return the root
-		 */
-		if (isSelfClosing(elName))
-		{
-			elName = elName.substring(0, elName.length()-1);
-			//Log.out("new closing tag:   "+elName);
-			Element el = makeElement(elName, tokens);
-			if (root != null)
-			{
-				root.addChild(el);
-			}
-			else
-			{
-				// error. if there's no root, return the element. it's the new root
-				return el;
-			}
-			
-			return root;
-		}
-		
-		/*
-		 * starting tags
-		 */
-		if (isTagOpening(elName))
-		{
-			//Log.out("new tag:           "+elName);
-			Element el = makeElement(elName, tokens);
-			if (root != null)
-			{
-				root.addChild(el);
-			}
-			else
-			{
-				// error
-			}
-			
-			return el;
-		}
-		
-		/*
-		 * closing tag
-		 */
-		if (isTagClosing(elName))
-		{
-			//Log.out("closing tag:       "+elName);
-			if (root!=null)
-			{
-				if (root.getParent()!=null)
-					return root.getParent();
-			}
-			else
-			{
-				// error
-			}
-			
-			return root;
-		}
-		
-		/*
-		 * default
-		 */
-		return root;
-	}
-	
-	private Element makeElement(String elementName, String[] tokens)
-	{
-		Element el = new Element(elementName);
-		for (int i=1,l=tokens.length; i<l; i++)
-		{
-			String att = tokens[i];
-			el.addAttribute( new Attribute().setAttribute(att) );
-		}
-		return el;
-	}
-	
-	private void parseProlog(Document doc, String line) throws XMLBadPrologException 
-	{
-		line = StringUtil.compact(line);
-		
-		if (line.startsWith("?"))
-		{
-			if (line.startsWith("? ")) throw new XMLBadPrologException(null);
-			if (!line.endsWith("?")) throw new XMLBadPrologException(null);
-			String[] tokens = line.split(" ");
-			String prologType = tokens[0];
-			Prolog pr = null;
-			
-			if (prologType.equalsIgnoreCase("?xml"))
-			{
-				pr = new XMLProlog();
-				for (int i=1,l=tokens.length-1; i<l; i++)
-				{
-					String att = tokens[i];
-					pr.addAttribute( new Attribute().setAttribute(att) );
-				}
-			}
-			
-			if (pr!=null)
-				doc.setProlog(pr);
+			String chr = ""+( (char)fis.read() );
+			nextCharacter(chr);
 		}
 	}
 	
-	private boolean isNewTag(String chr)
+	// ====================================================================================
+	
+	@Override
+	void onDocumentStart() 
 	{
-		return chr.equalsIgnoreCase("<");
+		document = new Document();
+		current = new Element("xml");
+		path.clear();
+		path.add(current);
+	}
+
+	@Override
+	void onDocumentEnd() 
+	{
+		Element root = path.get(0).getChild(0);
+		document.setRootElement(root);
 	}
 	
-	private boolean isEndTag(String chr)
+	@Override
+	public void onDocumentProlog(Attributes attrs) 
 	{
-		return chr.equalsIgnoreCase(">");
+		Prolog pr = new XMLProlog();
+		Iterator<Attribute> it = attrs.getIterator();
+		while (it.hasNext())
+		{
+			Attribute a = it.getNext();
+			pr.addAttribute(a);
+		}
+		document.setProlog(pr);
+	}
+
+	@Override
+	public void onElementStart(String eName, Attributes attrs) 
+	{
+		Element el = new Element(eName);
+		Iterator<Attribute> it = attrs.getIterator();
+		while (it.hasNext())
+		{
+			Attribute a = it.getNext();
+			el.addAttribute(a);
+		}
+		current.addChild(el);
+		current = el;
+		path.add(el);
 	}
 	
-	private boolean isSelfClosing(String text)
+	@Override
+	public void onElementEnd(String eName) 
 	{
-		return text.endsWith("/");
+		path.remove( path.size()-1 );
+		current = path.get( path.size()-1 );
 	}
 	
-	private boolean isTagOpening(String text)
+	@Override
+	public void onCharacter(String s)
 	{
-		return !text.contains("/");
-	}
-	
-	private boolean isTagClosing(String text)
-	{
-		return text.startsWith("/");
+		if (s.equals("\t")) return;
+		if (s.equals("\r")) return;
+		if (s.equals("\n")) return;
+		
+		String t = current.getText();
+		if (t==null)t="";
+		current.setText( t + s );
 	}
 }
