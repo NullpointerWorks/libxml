@@ -90,23 +90,23 @@ public class DOMDocumentLoader extends CharacterParser implements DOMLoader
 	// ====================================================================================
 	
 	@Override
-	void onDocumentStart() 
+	final void onDocumentStart() 
 	{
-		document = new Document();
+		if (document==null) document = new Document();
 		current = new Element("xml");
 		path.clear();
 		path.add(current);
 	}
 
 	@Override
-	void onDocumentEnd() 
+	final void onDocumentEnd() 
 	{
 		Element root = path.get(0).getChild(0);
 		document.setRootElement(root);
 	}
 	
 	@Override
-	public void onDocumentProlog(Attributes attrs) 
+	final void onDocumentProlog(Attributes attrs) 
 	{
 		Prolog pr = new XMLProlog();
 		Iterator<Attribute> it = attrs.getIterator();
@@ -119,7 +119,7 @@ public class DOMDocumentLoader extends CharacterParser implements DOMLoader
 	}
 
 	@Override
-	public void onElementStart(String eName, Attributes attrs) 
+	final void onElementStart(String eName, Attributes attrs) 
 	{
 		Element el = new Element(eName);
 		Iterator<Attribute> it = attrs.getIterator();
@@ -134,14 +134,14 @@ public class DOMDocumentLoader extends CharacterParser implements DOMLoader
 	}
 	
 	@Override
-	public void onElementEnd(String eName) 
+	final void onElementEnd(String eName) 
 	{
 		path.remove( path.size()-1 );
 		current = path.get( path.size()-1 );
 	}
 	
 	@Override
-	public void onCharacter(String s)
+	final void onCharacter(String s)
 	{
 		if (s.equals("\t")) return;
 		if (s.equals("\r")) return;

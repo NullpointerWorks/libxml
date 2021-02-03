@@ -23,7 +23,7 @@ abstract class CharacterParser
 	abstract void onElementEnd(String eName);
 	abstract void onCharacter(String c);
 	
-	protected void nextCharacter(String chr) throws XMLParseException
+	protected final void nextCharacter(String chr) throws XMLParseException
 	{
 		if (isNewTag(chr))
 		{
@@ -64,7 +64,7 @@ abstract class CharacterParser
 	{
 		if (line.startsWith("?"))
 		{
-			if (line.startsWith("? ")) throw new XMLBadPrologException("");
+			if (line.startsWith("? ")) throw new XMLBadPrologException("Prolog type is undefined.");
 			if (!line.endsWith("?")) throw new XMLBadPrologException("");
 			
 			Attributes attrs = new Attributes();
@@ -79,7 +79,6 @@ abstract class CharacterParser
 					attrs.addAttribute( new Attribute().setAttribute(att) );
 				}
 			}
-			
 			onDocumentProlog(attrs);
 		}
 	}
