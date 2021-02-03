@@ -204,11 +204,9 @@ public class SAXDocumentLoader implements SAXLoader, SAXEventListener
 		{
 			String att = tokens[i];
 			String[] t = att.split("=");
-			var a = new Attribute();
 			if (t.length < 2) return null;
 			if (t[0].length() < 1) return null;
-			a.setName( t[0] );
-			a.setValue( t[1].replace("\"", "") );
+			Attribute a = new Attribute(t[0], t[1]);
 			attrs.addAttribute(a);
 		}
 		return attrs;

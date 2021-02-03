@@ -1,150 +1,47 @@
-/*
- * Creative Commons - Attribution, Share Alike 4.0
- * Nullpointer Works (2021)
- * Use of this library is subject to license terms.
- */
 package exp.nullpointerworks.xml.io.dom;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 
 import com.nullpointerworks.util.StringUtil;
 
 import exp.nullpointerworks.xml.Attribute;
 import exp.nullpointerworks.xml.Document;
 import exp.nullpointerworks.xml.Element;
-import exp.nullpointerworks.xml.Text;
 import exp.nullpointerworks.xml.XMLBadPrologException;
 import exp.nullpointerworks.xml.XMLParseException;
-import exp.nullpointerworks.xml.io.DOMLoader;
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
 
-/**
- * Document Object Model File Loader. This implementation streams the content of a file and then parses to create an document element structure. This method is less resource intensive than the regular DOM loader.
- */
-public class StreamDocumentLoader implements DOMLoader
+abstract class XMLCharacterParser 
 {
-	private Document doc;
+	private String line = "";
+	private boolean hasTag = false;
+	private boolean hasProlog = false;
+	private Element root = null;
 	
-	public StreamDocumentLoader()
+	public void init()
 	{
-		doc = new Document();
-	}
-	
-	public StreamDocumentLoader(Document d)
-	{
-		this();
-		if (d!=null) doc = d;
-		setDocument(doc);
-	}
-	
-	@Override
-	public void setDocument(Document d)
-	{
-		if (d!=null) doc = d;
-	}
-	
-	@Override
-	public Document getDocument()
-	{
-		return doc;
-	}
-	
-	@Override
-	public Document parse(String path) throws FileNotFoundException, XMLParseException
-	{
-		File lfile = new File(path);
-		if (!lfile.exists()) throw new FileNotFoundException();
-	    InputStream stream = new FileInputStream(lfile);
-		return parse(stream);
-	}
-
-	@Override
-	public Document parse(InputStream fis) throws XMLParseException
-	{
-		doc = new Document();
-		
-		try 
-		{
-			parseContent(doc, fis);
-		}
-		catch (IOException e) 
-		{
-			throw new XMLParseException(e);
-		}
-		
-		try 
-		{
-			fis.close();
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		return doc;
-	}
-	
-	private void parseContent(Document doc, InputStream fis) throws XMLParseException, IOException
-	{
-		String line = "";
-		String chr;
-		boolean hasTag = false;
-		while (fis.available() > 0) 
-		{
-			chr = ""+( (char)fis.read() );
-			
-			if (isNewTag(chr))
-			{
-				hasTag = true;
-				continue;
-			}
-			if (isEndTag(chr))
-			if (hasTag)
-			{
-				parseProlog(doc, line);
-				break;
-			}
-			line += chr;
-		}
-		
 		line = "";
-		Element root = null;
-		while (fis.available() > 0) 
+		hasTag = false;
+		hasProlog = false;
+		root = null;
+	}
+	
+	public void nextCharacter(Document doc, String chr) throws XMLParseException
+	{
+		if (isNewTag(chr))
 		{
-			chr = ""+( (char)fis.read() );
-			if (isNewTag(chr))
-			{
-				if (line.length() > 0) 
-				{
-					if (root!=null) 
-					{
-						root.addChild( new Text(line) );
-					}
-					else
-					{
-						// error
-					}
-					line = "";
-				}
-				continue;
-			}
 			
-			if (isEndTag(chr))
-			{
-				root = parseTag(root, line);
-				line = "";
-				continue;
-			}
-			
-			line += chr;
+			return;
 		}
 		
-		doc.setRootElement(root);
+		if (isEndTag(chr))
+		{
+			
+			
+			
+			return;
+		}
+		
+		line += chr;
 	}
 	
 	private Element parseTag(Element root, String line) throws XMLParseException 
@@ -161,6 +58,7 @@ public class StreamDocumentLoader implements DOMLoader
 		if (isSelfClosing(elName))
 		{
 			elName = elName.substring(0, elName.length()-1);
+			//Log.out("new closing tag:   "+elName);
 			Element el = makeElement(elName, tokens);
 			if (root != null)
 			{
@@ -180,6 +78,7 @@ public class StreamDocumentLoader implements DOMLoader
 		 */
 		if (isTagOpening(elName))
 		{
+			//Log.out("new tag:           "+elName);
 			Element el = makeElement(elName, tokens);
 			if (root != null)
 			{
@@ -198,6 +97,7 @@ public class StreamDocumentLoader implements DOMLoader
 		 */
 		if (isTagClosing(elName))
 		{
+			//Log.out("closing tag:       "+elName);
 			if (root!=null)
 			{
 				if (root.getParent()!=null)

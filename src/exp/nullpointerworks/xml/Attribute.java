@@ -39,9 +39,10 @@ public class Attribute
 		name = ""+n;
 		return this;
 	}
-
+	
 	public Attribute setValue(String v)
 	{
+		v = v.replace("\"", ""); // remove excess quotations
 		value = ""+v;
 		return this;
 	}

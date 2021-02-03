@@ -84,12 +84,12 @@ public class MainExample1
 		 * In other words, the text on an element is always the first 
 		 * child element of the Text subclass.
 		 */
-		Element person = new Element("sometext");
-		person.addAttribute("stuff","someattribute");
-		person.setText("This is some example text.");
+		Element el = new Element("sometext");
+		el.addAttribute("stuff","someattribute");
+		el.setText("This is some example text.");
 		
 		Element root = doc.getRootElement();
-		root.addChild(person);
+		root.addChild(el);
 		
 		// don't forget to save
 		try
