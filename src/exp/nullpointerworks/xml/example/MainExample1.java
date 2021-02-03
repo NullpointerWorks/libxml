@@ -89,13 +89,6 @@ public class MainExample1
 		el.addAttribute("stuff","someattribute");
 		el.setText("This is some example text.");
 		
-		/*
-		 * nest an element in another.
-		 */
-		Element elm = new Element("moretext");
-		elm.setText("This is some more example text.");
-		el.addChild(elm);
-		
 		Element root = doc.getRootElement();
 		root.addChild(el);
 		

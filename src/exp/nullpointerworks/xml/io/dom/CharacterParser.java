@@ -14,6 +14,7 @@ abstract class CharacterParser
 {
 	private String line = "";
 	private boolean hasTag = false;
+	private boolean hasTagContainment = false;
 	
 	abstract void onDocumentStart();
 	abstract void onDocumentEnd();
@@ -49,12 +50,12 @@ abstract class CharacterParser
 				hasTag = false;
 				return;
 			}
+			
 			line += chr;
+			return;
 		}
-		else
-		{
-			onCharacter(chr);
-		}
+		
+		if (hasTagContainment) onCharacter(chr);
 	}
 	
 	// ====================================================================
@@ -90,6 +91,7 @@ abstract class CharacterParser
 			String tagName = line.split(" ")[0];
 			Attributes attrs = findAttributes(line);
 			onElementStart(tagName, attrs);
+			hasTagContainment = true;
 			return;
 		}
 		
@@ -97,12 +99,14 @@ abstract class CharacterParser
 		{
 			String tagName = line.substring(1).trim();
 			onElementEnd(tagName);
+			hasTagContainment = false;
 			return;
 		}
 		
 		if (isSelfClosing(line))
 		{
-			String tagName = line.substring(0,line.length()-1).trim();
+			String tagName = line.split(" ")[0];
+			line = line.substring(tagName.length(), line.length()-1);
 			Attributes attrs = findAttributes(line);
 			onElementStart(tagName, attrs);
 			onElementEnd(tagName);
@@ -117,9 +121,14 @@ abstract class CharacterParser
 		{
 			String att = tokens[i];
 			String[] t = att.split("=");
-			if (t.length < 2) return null;
-			if (t[0].length() < 1) return null;
-			Attribute a = new Attribute(t[0], t[1]);
+			if (t.length < 2) continue; // TODO catch attribute markers without values
+			
+			String name = t[0];
+			if (name.length() < 1) continue;
+			
+			String value = t[1];
+			Attribute a = new Attribute(name, value);
+			
 			attrs.addAttribute(a);
 		}
 		return attrs;
