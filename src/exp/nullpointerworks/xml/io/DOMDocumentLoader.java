@@ -3,7 +3,7 @@
  * Nullpointer Works (2021)
  * Use of this library is subject to license terms.
  */
-package exp.nullpointerworks.xml.io.dom;
+package exp.nullpointerworks.xml.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +20,7 @@ import exp.nullpointerworks.xml.Attributes;
 import exp.nullpointerworks.xml.Document;
 import exp.nullpointerworks.xml.Element;
 import exp.nullpointerworks.xml.XMLParseException;
-import exp.nullpointerworks.xml.io.DOMLoader;
+import exp.nullpointerworks.xml.io.util.CharacterParser;
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
 
@@ -90,23 +90,23 @@ public class DOMDocumentLoader extends CharacterParser implements DOMLoader
 	// ====================================================================================
 	
 	@Override
-	final void onDocumentStart() 
+	protected final void onDocumentStart() 
 	{
 		if (document==null) document = new Document();
 		current = new Element("xml");
 		path.clear();
 		path.add(current);
 	}
-
+	
 	@Override
-	final void onDocumentEnd() 
+	protected final void onDocumentEnd() 
 	{
 		Element root = path.get(0).getChild(0);
 		document.setRootElement(root);
 	}
 	
 	@Override
-	final void onDocumentProlog(Attributes attrs) 
+	protected final void onDocumentProlog(Attributes attrs) 
 	{
 		Prolog pr = new XMLProlog();
 		Iterator<Attribute> it = attrs.getIterator();
@@ -119,7 +119,7 @@ public class DOMDocumentLoader extends CharacterParser implements DOMLoader
 	}
 
 	@Override
-	final void onElementStart(String eName, Attributes attrs) 
+	protected final void onElementStart(String eName, Attributes attrs) 
 	{
 		Element el = new Element(eName);
 		Iterator<Attribute> it = attrs.getIterator();
@@ -134,14 +134,14 @@ public class DOMDocumentLoader extends CharacterParser implements DOMLoader
 	}
 	
 	@Override
-	final void onElementEnd(String eName) 
+	protected final void onElementEnd(String eName) 
 	{
 		path.remove( path.size()-1 );
 		current = path.get( path.size()-1 );
 	}
 	
 	@Override
-	final void onCharacter(String s)
+	protected final void onCharacter(String s)
 	{
 		if (s.equals("\t")) return;
 		if (s.equals("\r")) return;

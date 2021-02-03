@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import exp.nullpointerworks.xml.XMLParseException;
-import exp.nullpointerworks.xml.io.sax.SAXEventListener;
 
 public interface SAXLoader
 {

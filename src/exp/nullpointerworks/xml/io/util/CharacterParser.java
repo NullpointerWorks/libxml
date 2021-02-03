@@ -3,25 +3,25 @@
  * Nullpointer Works (2021)
  * Use of this library is subject to license terms.
  */
-package exp.nullpointerworks.xml.io.dom;
+package exp.nullpointerworks.xml.io.util;
 
 import exp.nullpointerworks.xml.Attribute;
 import exp.nullpointerworks.xml.Attributes;
 import exp.nullpointerworks.xml.XMLBadPrologException;
 import exp.nullpointerworks.xml.XMLParseException;
 
-abstract class CharacterParser 
+public abstract class CharacterParser 
 {
 	private String line = "";
 	private boolean hasTag = false;
 	private boolean hasTagContainment = false;
 	
-	abstract void onDocumentStart();
-	abstract void onDocumentEnd();
-	abstract void onDocumentProlog(Attributes attrs);
-	abstract void onElementStart(String eName, Attributes attrs);
-	abstract void onElementEnd(String eName);
-	abstract void onCharacter(String c);
+	protected abstract void onDocumentStart();
+	protected abstract void onDocumentEnd();
+	protected abstract void onDocumentProlog(Attributes attrs);
+	protected abstract void onElementStart(String eName, Attributes attrs);
+	protected abstract void onElementEnd(String eName);
+	protected abstract void onCharacter(String c);
 	
 	protected final void nextCharacter(String chr) throws XMLParseException
 	{

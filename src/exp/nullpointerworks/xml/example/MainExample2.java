@@ -15,9 +15,9 @@ import exp.nullpointerworks.xml.FormatFactory;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
 import exp.nullpointerworks.xml.io.DocumentWriter;
+import exp.nullpointerworks.xml.io.SAXDocumentLoader;
+import exp.nullpointerworks.xml.io.SAXEventListener;
 import exp.nullpointerworks.xml.io.SAXLoader;
-import exp.nullpointerworks.xml.io.sax.SAXDocumentLoader;
-import exp.nullpointerworks.xml.io.sax.SAXEventListener;
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;
 

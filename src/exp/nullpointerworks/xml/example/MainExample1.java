@@ -12,7 +12,7 @@ import exp.nullpointerworks.xml.Version;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
 import exp.nullpointerworks.xml.io.DocumentWriter;
-import exp.nullpointerworks.xml.io.dom.DOMDocumentLoader;
+import exp.nullpointerworks.xml.io.DOMDocumentLoader;
 import exp.nullpointerworks.xml.io.DOMLoader;
 import exp.nullpointerworks.xml.prolog.Prolog;
 import exp.nullpointerworks.xml.prolog.XMLProlog;

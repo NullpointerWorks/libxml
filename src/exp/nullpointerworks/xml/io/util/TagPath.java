@@ -1,9 +1,9 @@
-package exp.nullpointerworks.xml.io.sax;
+package exp.nullpointerworks.xml.io.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class TagPath 
+public class TagPath 
 {
 	private List<String> path;
 	
