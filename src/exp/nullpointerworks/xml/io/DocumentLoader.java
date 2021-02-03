@@ -13,8 +13,8 @@ import exp.nullpointerworks.xml.XMLParseException;
 
 public interface DocumentLoader
 {
-	XMLLoaderType getLoaderType();
 	Document getDocument();
+	XMLLoaderType getLoaderType();
 	Document parse(String path) throws FileNotFoundException, XMLParseException;
 	Document parse(InputStream is) throws XMLParseException;
 }

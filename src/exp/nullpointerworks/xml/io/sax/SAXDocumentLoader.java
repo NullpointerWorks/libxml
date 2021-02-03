@@ -10,8 +10,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.nullpointerworks.util.pattern.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import exp.nullpointerworks.xml.Attribute;
 import exp.nullpointerworks.xml.Attributes;
@@ -26,32 +26,35 @@ import exp.nullpointerworks.xml.io.XMLLoaderType;
  */
 public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 {
-	private SAXEventListener saxel;
-	private Document doc = null;
+	private SAXDocumentBuilder saxdb;
+	private List<SAXEventListener> saxel;
 	private TagPath tagPath;
 	
 	public SAXDocumentLoader()
 	{
 		tagPath = new TagPath();
-		saxel = this;
+		saxel = new ArrayList<SAXEventListener>();
+		saxdb = new SAXDocumentBuilder();
+		saxel.add(saxdb);
 	}
 	
 	public SAXDocumentLoader(SAXEventListener l)
 	{
-		this();
-		saxel = l;
+		tagPath = new TagPath();
+		saxel = new ArrayList<SAXEventListener>();
+		saxel.add(l);
+	}
+	
+	@Override
+	public Document getDocument() 
+	{
+		return saxdb.getDocument();
 	}
 	
 	@Override
 	public XMLLoaderType getLoaderType() 
 	{
 		return XMLLoaderType.SAX;
-	}
-	
-	@Override
-	public Document getDocument() 
-	{
-		return doc;
 	}
 	
 	@Override
@@ -66,19 +69,19 @@ public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 	@Override
 	public Document parse(InputStream fis) throws XMLParseException
 	{
-		if (saxel == null) saxel = this;
+		if (saxel == null) throw new XMLParseException(null);
 		
 		tagPath.push("xml");
-		saxel.onDocumentStart();
+		onDocumentStart();
 		try 
 		{
-			parseStream(saxel, fis);
+			parseStream(fis);
 		}
 		catch (IOException e) 
 		{
 			e.printStackTrace();
 		}
-		saxel.onDocumentEnd();
+		onDocumentEnd();
 		
 		try 
 		{
@@ -88,70 +91,73 @@ public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 		{
 			e.printStackTrace();
 		}
-		return doc;
+		return saxdb.getDocument();
 	}
 	
 	// ===============================================================================
 	
+	public void addSAXEventListener(SAXEventListener el)
+	{
+		if (!saxel.contains(el)) saxel.add(el);
+	}
+	
 	@Override
 	public void onDocumentStart() 
 	{
-		doc = new Document();
+		for (SAXEventListener el : saxel)
+		{
+			el.onDocumentStart();
+		}
 	}
 	
 	@Override
 	public void onDocumentEnd() 
 	{
-		
+		for (SAXEventListener el : saxel)
+		{
+			el.onDocumentEnd();
+		}
 	}
 	
 	@Override
 	public void onDocumentProlog(Attributes attrs) 
 	{
-		System.out.print("prolog : ");
-		Iterator<Attribute> it = attrs.getIterator();
-		while (it.hasNext())
+		for (SAXEventListener el : saxel)
 		{
-			Attribute a = it.getNext();
-			System.out.print( a.getName()+"="+a.getValue()+" " );
+			el.onDocumentProlog(attrs);
 		}
-		System.out.println();
 	}
-
+	
 	@Override
 	public void onElementStart(String xmlPath, String eName, Attributes attrs) 
 	{
-		System.out.print(xmlPath+" : "+eName+" ");
-		
-		Iterator<Attribute> it = attrs.getIterator();
-		while (it.hasNext())
+		for (SAXEventListener el : saxel)
 		{
-			Attribute a = it.getNext();
-			System.out.print( a.getName()+"="+a.getValue()+" " );
+			el.onElementStart(xmlPath, eName, attrs);
 		}
-		
-		System.out.println();
 	}
-
+	
 	@Override
 	public void onElementEnd(String xmlPath, String eName) 
 	{
-		System.out.println(xmlPath+" : "+eName);
+		for (SAXEventListener el : saxel)
+		{
+			el.onElementEnd(xmlPath, eName);
+		}
 	}
-
+	
 	@Override
-	public void onCharacter(char c)
+	public void onCharacter(String xmlPath, char c) 
 	{
-		//String s = ""+c;
-		//if (s.equals("\r")) return;
-		//if (s.equals("\n")) return;
-		//if (s.equals("\t")) return;
-		//System.out.println(s);
+		for (SAXEventListener el : saxel)
+		{
+			el.onCharacter(xmlPath, c);
+		}
 	}
 	
 	// ===============================================================================
 	
-	private void parseProlog(SAXEventListener saxel, String line) throws XMLBadPrologException 
+	private void parseProlog(String line) throws XMLBadPrologException 
 	{
 		if (line.startsWith("?"))
 		{
@@ -170,17 +176,17 @@ public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 					attrs.addAttribute( new Attribute().setAttribute(att) );
 				}
 			}
-			saxel.onDocumentProlog(attrs);
+			onDocumentProlog(attrs);
 		}
 	}
 	
-	private void parseTag(SAXEventListener saxel, String line) 
+	private void parseTag(String line) 
 	{
 		if (isTagOpening(line))
 		{
 			String tagName = line.split(" ")[0];
 			Attributes attrs = findAttributes(line);
-			saxel.onElementStart(tagPath.getPath(), tagName, attrs);
+			onElementStart(tagPath.getPath(), tagName, attrs);
 			tagPath.push(tagName);
 			return;
 		}
@@ -189,14 +195,16 @@ public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 		{
 			String tagName = line.substring(1).trim();
 			tagPath.pop();
-			saxel.onElementEnd(tagPath.getPath(), tagName);
+			onElementEnd(tagPath.getPath(), tagName);
 			return;
 		}
 		
 		if (isSelfClosing(line))
 		{
-			
-			
+			String tagName = line.substring(0,line.length()-1).trim();
+			Attributes attrs = findAttributes(line);
+			onElementStart(tagPath.getPath(), tagName, attrs);
+			onElementEnd(tagPath.getPath(), tagName);
 		}
 	}
 	
@@ -207,12 +215,18 @@ public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 		for (int i=1,l=tokens.length; i<l; i++)
 		{
 			String att = tokens[i];
-			attrs.addAttribute( new Attribute().setAttribute(att) );
+			String[] t = att.split("=");
+			var a = new Attribute();
+			if (t.length < 2) return null;
+			if (t[0].length() < 1) return null;
+			a.setName( t[0] );
+			a.setValue( t[1].replace("\"", "") );
+			attrs.addAttribute(a);
 		}
 		return attrs;
 	}
 
-	private void parseStream(SAXEventListener saxel, InputStream fis) throws XMLBadPrologException, IOException
+	private void parseStream(InputStream fis) throws XMLBadPrologException, IOException
 	{
 		String line = "";
 		boolean hasTag = false;
@@ -231,14 +245,13 @@ public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 			if (hasTag)
 			{
 				line = compact(line);
-				//System.out.println("|"+line);
 				if (isProlog(line))
 				{
-					parseProlog(saxel, line);
+					parseProlog(line);
 				}
 				else
 				{
-					parseTag(saxel, line);
+					parseTag(line);
 				}
 				
 				line = "";
@@ -247,7 +260,7 @@ public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 			}
 			
 			if (hasTag) line += s;
-			else saxel.onCharacter(c);
+			else onCharacter(tagPath.getPath(),c);
 		}
 	}
 	

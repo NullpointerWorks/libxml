@@ -1,15 +1,17 @@
 package exp.nullpointerworks.xml.example;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import exp.nullpointerworks.xml.Attributes;
 import exp.nullpointerworks.xml.Document;
 import exp.nullpointerworks.xml.Element;
+import exp.nullpointerworks.xml.FormatFactory;
 import exp.nullpointerworks.xml.XMLParseException;
+import exp.nullpointerworks.xml.format.Format;
+import exp.nullpointerworks.xml.io.DocumentIO;
 import exp.nullpointerworks.xml.io.DocumentLoader;
 import exp.nullpointerworks.xml.io.sax.SAXEventListener;
-import exp.nullpointerworks.xml.prolog.Prolog;
-import exp.nullpointerworks.xml.prolog.XMLProlog;
 import exp.nullpointerworks.xml.io.sax.SAXDocumentLoader;
 
 /**
@@ -36,7 +38,8 @@ public class MainExample2 implements SAXEventListener
 		 * load the file from the first example using a SAX event loader
 		 */
 		final String path = "bin/example1.xml";
-		DocumentLoader dl = new SAXDocumentLoader(this);
+		final String path2 = "bin/example2.xml";
+		DocumentLoader dl = new SAXDocumentLoader();
 		
 		try 
 		{
@@ -47,12 +50,24 @@ public class MainExample2 implements SAXEventListener
 			e.printStackTrace();
 			return;
 		}
+		
+		Document doc = dl.getDocument();
+		
+		final Format format = FormatFactory.getPrettyWindowsFormat();
+		try
+		{
+			DocumentIO.write(doc, path2, format);
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
 	public void onDocumentStart() 
 	{
-		doc = new Document();
+		
 	}
 
 	@Override
@@ -64,21 +79,12 @@ public class MainExample2 implements SAXEventListener
 	@Override
 	public void onDocumentProlog(Attributes attrs) 
 	{
-		Prolog pr = new XMLProlog();
-		var it = attrs.getIterator();
-		while(it.hasNext())
-		{
-			var att = it.getNext();
-			System.out.println( att.getString() );
-			pr.addAttribute(att);
-		}
+		
 	}
 	
 	@Override
 	public void onElementStart(String xmlPath, String eName, Attributes attrs) 
 	{
-		
-		
 		
 	}
 
@@ -89,7 +95,7 @@ public class MainExample2 implements SAXEventListener
 	}
 
 	@Override
-	public void onCharacter(char c) 
+	public void onCharacter(String xmlPath, char c) 
 	{
 		
 	}

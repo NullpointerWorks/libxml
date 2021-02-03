@@ -43,15 +43,15 @@ public class StreamDocumentLoader implements DocumentLoader
 	}
 	
 	@Override
-	public XMLLoaderType getLoaderType() 
-	{
-		return XMLLoaderType.STREAM;
-	}
-	
-	@Override
 	public Document getDocument()
 	{
 		return null;
+	}
+	
+	@Override
+	public XMLLoaderType getLoaderType() 
+	{
+		return XMLLoaderType.STREAM;
 	}
 	
 	@Override

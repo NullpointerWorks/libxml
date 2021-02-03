@@ -44,15 +44,15 @@ public class DOMDocumentLoader implements DocumentLoader
 	}
 	
 	@Override
-	public XMLLoaderType getLoaderType() 
-	{
-		return XMLLoaderType.DOM;
-	}
-	
-	@Override
 	public Document getDocument()
 	{
 		return doc;
+	}
+	
+	@Override
+	public XMLLoaderType getLoaderType() 
+	{
+		return XMLLoaderType.DOM;
 	}
 	
 	@Override

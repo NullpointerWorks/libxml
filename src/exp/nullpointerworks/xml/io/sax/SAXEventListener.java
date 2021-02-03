@@ -15,8 +15,8 @@ public interface SAXEventListener
 	void onDocumentStart();
 	void onDocumentEnd();
 	void onDocumentProlog(Attributes attrs);
-
+	
 	void onElementStart(String xmlPath, String eName, Attributes attrs);
 	void onElementEnd(String xmlPath, String eName);
-	void onCharacter(char c);
+	void onCharacter(String xmlPath, char c);
 }
