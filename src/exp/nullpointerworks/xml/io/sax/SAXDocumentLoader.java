@@ -95,10 +95,20 @@ public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 	}
 	
 	// ===============================================================================
-	
+
 	public void addSAXEventListener(SAXEventListener el)
 	{
 		if (!saxel.contains(el)) saxel.add(el);
+	}
+	
+	public void removeSAXEventListener(SAXEventListener el)
+	{
+		if (saxel.contains(el)) saxel.remove(el);
+	}
+	
+	public void clearSAXEventListeners()
+	{
+		saxel.clear();
 	}
 	
 	@Override
@@ -225,7 +235,7 @@ public class SAXDocumentLoader implements DocumentLoader, SAXEventListener
 		}
 		return attrs;
 	}
-
+	
 	private void parseStream(InputStream fis) throws XMLBadPrologException, IOException
 	{
 		String line = "";

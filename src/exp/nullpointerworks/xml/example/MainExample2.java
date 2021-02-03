@@ -3,22 +3,19 @@ package exp.nullpointerworks.xml.example;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import exp.nullpointerworks.xml.Attributes;
 import exp.nullpointerworks.xml.Document;
-import exp.nullpointerworks.xml.Element;
 import exp.nullpointerworks.xml.FormatFactory;
 import exp.nullpointerworks.xml.XMLParseException;
 import exp.nullpointerworks.xml.format.Format;
 import exp.nullpointerworks.xml.io.DocumentIO;
 import exp.nullpointerworks.xml.io.DocumentLoader;
-import exp.nullpointerworks.xml.io.sax.SAXEventListener;
 import exp.nullpointerworks.xml.io.sax.SAXDocumentLoader;
 
 /**
  * 
  * @author Michiel Drost - Nullpointer Works
  */
-public class MainExample2 implements SAXEventListener
+public class MainExample2
 {
 	public static void main(String[] args) 
 	{
@@ -29,21 +26,21 @@ public class MainExample2 implements SAXEventListener
 		new MainExample2();
 	}
 	
-	private Document doc;
-	private Element root;
-	
 	public MainExample2()
 	{
 		/*
 		 * load the file from the first example using a SAX event loader
+		 * 
+		 * when not specifying your own event listener a default will be used.
+		 * this stored a DOM object 
 		 */
-		final String path = "bin/example1.xml";
+		final String path1 = "bin/example1.xml";
 		final String path2 = "bin/example2.xml";
 		DocumentLoader dl = new SAXDocumentLoader();
 		
 		try 
 		{
-			dl.parse(path);
+			dl.parse(path1);
 		} 
 		catch (FileNotFoundException | XMLParseException e) 
 		{
@@ -62,41 +59,5 @@ public class MainExample2 implements SAXEventListener
 		{
 			e.printStackTrace();
 		}
-	}
-	
-	@Override
-	public void onDocumentStart() 
-	{
-		
-	}
-
-	@Override
-	public void onDocumentEnd() 
-	{
-		
-	}
-
-	@Override
-	public void onDocumentProlog(Attributes attrs) 
-	{
-		
-	}
-	
-	@Override
-	public void onElementStart(String xmlPath, String eName, Attributes attrs) 
-	{
-		
-	}
-
-	@Override
-	public void onElementEnd(String xmlPath, String eName) 
-	{
-		
-	}
-
-	@Override
-	public void onCharacter(String xmlPath, char c) 
-	{
-		
 	}
 }
