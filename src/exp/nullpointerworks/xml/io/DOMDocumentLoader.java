@@ -7,7 +7,6 @@ package exp.nullpointerworks.xml.io;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class DOMDocumentLoader extends CharacterParser implements DOMLoader
 	}
 	
 	@Override
-	public Document parse(String path) throws FileNotFoundException, XMLParseException 
+	public Document parse(String path) throws IOException, XMLParseException 
 	{
 		File initialFile = new File(path);
 	    InputStream stream;

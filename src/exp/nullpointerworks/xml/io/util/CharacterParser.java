@@ -104,8 +104,9 @@ public abstract class CharacterParser
 		
 		if (isSelfClosing(line))
 		{
+			line = line.substring(0,line.length()-1); // remove '/' character
 			String tagName = line.split(" ")[0];
-			line = line.substring(tagName.length(), line.length()-1);
+			line = line.substring(tagName.length());
 			Attributes attrs = findAttributes(line);
 			onElementStart(tagName, attrs);
 			onElementEnd(tagName);

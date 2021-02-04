@@ -5,7 +5,7 @@
  */
 package exp.nullpointerworks.xml.io;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import exp.nullpointerworks.xml.XMLParseException;
@@ -15,6 +15,6 @@ public interface SAXLoader
 	void addEventListener(SAXEventListener el);
 	void removeEventListener(SAXEventListener el);
 	void clearEventListeners();
-	void parse(String path) throws FileNotFoundException, XMLParseException;
+	void parse(String path) throws IOException, XMLParseException;
 	void parse(InputStream is) throws XMLParseException;
 }

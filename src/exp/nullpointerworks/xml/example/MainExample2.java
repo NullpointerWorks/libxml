@@ -1,6 +1,5 @@
 package exp.nullpointerworks.xml.example;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +52,7 @@ public class MainExample2 implements SAXEventListener
 		{
 			sl.parse(path1);
 		} 
-		catch (FileNotFoundException | XMLParseException e) 
+		catch (IOException | XMLParseException e) 
 		{
 			e.printStackTrace();
 			return;
