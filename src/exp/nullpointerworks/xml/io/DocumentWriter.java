@@ -30,6 +30,11 @@ public class DocumentWriter
 	
 	public DocumentWriter(Format format)
 	{
+		setFormatter(format);
+	}
+	
+	public void setFormatter(Format format)
+	{
 		this.format = format;
 	}
 	

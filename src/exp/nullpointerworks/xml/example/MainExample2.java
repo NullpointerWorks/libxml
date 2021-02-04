@@ -129,9 +129,8 @@ public class MainExample2 implements SAXEventListener
 	}
 	
 	@Override
-	public void onCharacter(String xmlPath, char c)
+	public void onCharacter(String xmlPath, String s)
 	{
-		String s = ""+c;
 		if (s.equals("\t")) return;
 		if (s.equals("\r")) return;
 		if (s.equals("\n")) return;

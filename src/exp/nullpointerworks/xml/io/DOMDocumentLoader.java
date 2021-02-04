@@ -58,7 +58,7 @@ public class DOMDocumentLoader extends CharacterParser implements DOMLoader
 		
 		try 
 		{
-			parseContent(document, fis);
+			parseContent(fis);
 		}
 		catch (IOException e) 
 		{
@@ -78,7 +78,7 @@ public class DOMDocumentLoader extends CharacterParser implements DOMLoader
 		return document;
 	}
 	
-	private void parseContent(Document doc, InputStream fis) throws XMLParseException, IOException
+	private void parseContent(InputStream fis) throws XMLParseException, IOException
 	{
 		while (fis.available() > 0) 
 		{
@@ -117,7 +117,7 @@ public class DOMDocumentLoader extends CharacterParser implements DOMLoader
 		}
 		document.setProlog(pr);
 	}
-
+	
 	@Override
 	protected final void onElementStart(String eName, Attributes attrs) 
 	{

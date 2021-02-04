@@ -18,5 +18,5 @@ public interface SAXEventListener
 	
 	void onElementStart(String xmlPath, String eName, Attributes attrs);
 	void onElementEnd(String xmlPath, String eName);
-	void onCharacter(String xmlPath, char c);
+	void onCharacter(String xmlPath, String c);
 }
