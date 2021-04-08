@@ -1,4 +1,4 @@
-<a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-sa.png" alt="CC BY-SA 4.0" width="100"/></a>
+<a target="_blank" href="https://unlicense.org"><img src="https://unlicense.org/pd-icon.png" alt="Unlicense" width="40"/> Unlicense</a>
 
 # libxml
 An XML/HTML library to read and write XML formatted text files. 

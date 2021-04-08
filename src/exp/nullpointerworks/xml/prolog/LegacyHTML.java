@@ -1,7 +1,7 @@
 /*
- * Creative Commons - Attribution, Share Alike 4.0
+ * This is free and unencumbered software released into the public domain.
+ * (http://unlicense.org/)
  * Nullpointer Works (2021)
- * Use of this library is subject to license terms.
  */
 package exp.nullpointerworks.xml.prolog;
 

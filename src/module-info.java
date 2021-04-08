@@ -1,7 +1,8 @@
 /**
- * Creative Commons - Attribution, Share Alike 4.0<br>
- * Nullpointer Works (2021)<br>
- * Using this library makes you subject to the license terms.<br>
+ * This is free and unencumbered software released into the public domain.
+ * (http://unlicense.org/)
+ * Nullpointer Works (2021)
+ *
  * @version 0.16.0 experimental
  * @author Michiel Drost - Nullpointer Works
  */
