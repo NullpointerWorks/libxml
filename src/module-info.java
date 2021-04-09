@@ -1,7 +1,7 @@
 /**
- * This is free and unencumbered software released into the public domain.
- * (http://unlicense.org/)
- * Nullpointer Works (2021)
+ * This is free and unencumbered software released into the public domain.<br>
+ * (http://unlicense.org/)<br>
+ * Nullpointer Works (2021)<br>
  *
  * @version 0.16.0 experimental
  * @author Michiel Drost - Nullpointer Works
