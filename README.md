@@ -11,5 +11,5 @@ An XML/HTML library to read and write XML formatted text files.
 * exports exp.nullpointerworks.xml.io
 * exports exp.nullpointerworks.xml.prolog
 
-# xml v0.16.0 experimental
+# xml v0.17.0 experimental
 * util 1.0.x
